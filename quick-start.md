@@ -65,7 +65,7 @@ Besides the size of the range order, a min and max price limit must be set. For 
 
 
 
-For more information regarding Range Orders and how they work please see [LP Range Orders](concepts/lp-range-orders.md).
+For more information regarding Range Orders and how they work please see [LP Range Orders](the-premia-protocol/concepts/lp-range-orders.md).
 
 <figure><img src=".gitbook/assets/Screenshot_2023-03-28_at_14.20.10.png" alt=""><figcaption></figcaption></figure>
 
@@ -85,7 +85,7 @@ Alternatively, positions can be closed directly from the Trade page. If the trad
 
 Users may stake the Premia token for many reasons. In order to stake Premia tokens, a lock up period must be selected (zero days can be selected). The longer the lock period, the more influence (votes) the staked premia will have and the more staking rewards that can be earned. Staked Premia also shares in earnings from trading fees. Currently, any tokens not paid directly to LP’s are split 50/50 between stakers and the protocol.
 
-For additional details on Governance and Voting, please see [here](governance/).
+For additional details on Governance and Voting, please see [here](broken-reference).
 
 <figure><img src=".gitbook/assets/Screenshot 2023-03-28 at 10.47.05 AM.png" alt=""><figcaption></figcaption></figure>
 

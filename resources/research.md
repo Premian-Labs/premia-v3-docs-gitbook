@@ -16,8 +16,6 @@
 4. **Margin and Leverage**: Lending pools are introduced that allow LPs and LTs to borrow and partially collateralize their short option contracts. Borrowers pay an upfront commitment fee based on the utilization of the total available capital in the pool.
 5. **OTC Liquidity**: The over-the-counter (OTC) quote system (RFQ) enables vaults and market-makers to provide quotes to users or aggregators on- or off-chain, increasing liquidity across strikes and maturities.
 
-
-
 ### **Depot/Vault Specifications**
 
 [**Premia V3 Underwriter Vault Litepaper**](https://files.gitbook.com/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FyZYDiwOkAUTz3OWc6dGF%2Fuploads%2FObM8YHOOU3SFa1q6lmPp%2Funderwritervault\_documentation.pdf?alt=media\&token=6f1c9fac-896a-471b-85b2-bc5c0cc7ff6c) Last Updated: April 6th, 2023&#x20;

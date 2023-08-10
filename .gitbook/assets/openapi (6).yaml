@@ -187,13 +187,6 @@ paths:
           schema:
             type: string
             pattern: "^42161$|^421613$"
-        - name: provider
-          in: query
-          description: unique address of the provider
-          required: false
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
       responses:
         '200':
           description: Successful operation
@@ -233,7 +226,7 @@ paths:
             pattern: "^0x[a-fA-F0-9]{40}$"
         - name: size
           in: query
-          description: min order size (1 contract = 1e18)
+          description: fill size (1 contract = 1e18)
           required: false
           schema:
             type: string
@@ -252,13 +245,6 @@ paths:
           schema:
             type: string
             pattern: "^42161$|^421613$"
-        - name: provider
-          in: query
-          description: unique address of the provider
-          required: false
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
       responses:
         '200':
           description: Successful operation

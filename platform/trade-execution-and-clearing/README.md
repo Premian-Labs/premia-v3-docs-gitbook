@@ -1,3 +1,0 @@
-# Trade Execution & Clearing
-
-The Premia ecosystem of smart contracts offer non-custodial protections for liquidity providers and traders alike.  Combining the distributed ledger equivalents of clearing houses and trading facilities, Premia offers best in class prices for shallow liquidity pools that scales beautifully with increasing deposits.  Being the first protocol to bring on-chain implied volatility oracles to EVM networks, Premia is able to properly map the implied volatility surface for mature crypto asset markets, as well as utilize a novel correlation approach to immature crypto asset derivative markets.

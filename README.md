@@ -1,4 +1,5 @@
 ---
+description: Other than the Premier DeFi Token Options Exchange (DTOX) 🙅‍♂️
 cover: .gitbook/assets/KnowledgeBase.svg
 coverY: 0
 ---
