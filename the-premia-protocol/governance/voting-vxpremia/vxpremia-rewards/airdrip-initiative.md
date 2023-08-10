@@ -20,3 +20,6 @@ The AirDrip Initiative is not just a one-time event but a continuous journey. On
   * This is to penalize any user trying to game the influence metric during the snapshot date.
 * One year following the Snapshot Date, the Tokens will be dripped out to all eligible wallets monthly (linearly) over the next year. The allocation of 2mm Tokens will then be fully vested and available for claim by Snapshot Date + 2 years.
 * For the remaining 8mm Tokens, the Parliament will reconvene in January of 2024 with a long-term proposal for allocation.
+
+[Airdrip 1 Initial Snapshot](https://files.premia.finance/$/IPRQM)\
+As the Airdrip smart contracts are being developed, periodic snapshots will be taken to remove wallets that have withdrawn early and paid the withdrawal penalty fee.  At the point, the Airdrip tokens are allocated to the smart contract, and eligible users are added, the smart contract will handle the removal of allocation for any wallet that pays a withdrawal penalty fee and reallocate to the remaining wallets eligible.
