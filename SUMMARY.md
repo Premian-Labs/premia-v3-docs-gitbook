@@ -91,6 +91,7 @@
   * [Cookie Policy](resources/legal-terms-and-disclaimers/cookie-policy.md)
   * [Trading Competition Terms and Disclaimers](resources/legal-terms-and-disclaimers/trading-competition-terms-and-disclaimers.md)
   * [Legal Disclaimer](resources/legal-terms-and-disclaimers/legal-disclaimer.md)
+  * [Media Disclaimer](resources/legal-terms-and-disclaimers/media-disclaimer.md)
   * [AML/KYC Policies](resources/legal-terms-and-disclaimers/aml-kyc-policies.md)
 * [📰 Newsletter](https://blog.premia.blue/subscribe)
 * [🌊 Crypto News Blotter](https://t.me/cryptonewswave)
