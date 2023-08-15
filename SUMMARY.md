@@ -61,7 +61,7 @@
   * [Subgraph API](developer-center/api/subgraph-api.md)
 * [SDK](developer-center/sdk/README.md)
   * [Guides](developer-center/sdk/guides.md)
-  * [SDK Tech Docs](developer-center/sdk/sdk-tech-docs.md)
+  * [SDK Technical Docs](developer-center/sdk/sdk-technical-docs.md)
 * [Contracts](developer-center/contracts/README.md)
   * [Multi-Signature Wallets](developer-center/contracts/multi-signature-wallets.md)
   * [V3 Protocol](developer-center/contracts/v3-protocol/README.md)
