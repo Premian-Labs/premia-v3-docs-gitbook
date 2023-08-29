@@ -52,7 +52,9 @@ Once the report is received, the Premia Finance team will review the vulnerabili
 
 ### Conclusion <a href="#conclusion" id="conclusion"></a>
 
-The Premia Finance bug bounty program is an important part of our commitment to security and the protection of user funds. We encourage anyone with knowledge of potential vulnerabilities to participate in the program and help us ensure the integrity of our platform.\
+The Premia Finance bug bounty program is an important part of our commitment to security and the protection of user funds. We encourage anyone with knowledge of potential vulnerabilities to participate in the program and help us ensure the integrity of our platform.
+
+For Terms and Conditions please see [bug-bounty-terms.md](legal/bug-bounty-terms.md "mention")\
 
 
 **About Hats Finance**\

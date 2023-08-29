@@ -1,2 +1,0 @@
-# Legal, Terms, & Disclaimers
-
