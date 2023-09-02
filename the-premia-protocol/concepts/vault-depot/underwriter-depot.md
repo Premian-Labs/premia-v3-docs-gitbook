@@ -17,6 +17,7 @@ _The vault's purpose is to cluster liquidity that will be used to underwrite opt
 3. **Accounting of Locked Spreads**: The price quoted by the vault includes the fair value of the option, the spread charged by the vault, and the minting fee paid to the pool. Spreads collected from underwriting options are considered profits and are dispersed linearly over the option's lifetime to prevent front-running trades.
 4. **Fee Collection**: LPs pay management and performance fees. Management fees are for managing LPs' assets, and performance fees are for generating positive returns. Fees are triggered upon a transfer or redemption and are only paid on the transferred/redeemed amount.
 5. **Trade**: Users can buy call/put options from a vault, given that a pool with the corresponding maturity, strike, and option type exists. Trades need to pass filters based on the option's delta and the days to expiry. The vault charges a spread using the c-level function.
+6. **Options Pricing**: The Underwriter Vault uses a [SSVI Model](../../../resources/research/ssvi.md) for Options Pricing.
 
 _User Stories_
 
@@ -31,5 +32,5 @@ _• As a buyer, I want to purchase options from the vault by paying a premium f
 _• As a vault operator, I want to settle all options until the current time so that I increase the vault's liquidity / available assets, such that it will be available for depositors to withdraw or buyers to purchase new options._
 
 {% hint style="info" %}
-This is just a summary of the Underwriter Options Depot - The full detailed explanation can be found within the [research specification](../../../resources/research.md)
+This is just a summary of the Underwriter Options Depot - The full detailed explanation can be found within the [research specification](../../../resources/research/)
 {% endhint %}
