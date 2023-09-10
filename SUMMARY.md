@@ -109,4 +109,5 @@
 * [📰 Newsletter](https://blog.premia.blue/subscribe)
 * [🌊 Crypto News Blotter](https://t.me/cryptonewswave)
 * [🎓 Academy](https://academy.premia.blue/)
-* [🔵 Blue Alpha (V3)](https://app.premia.blue/)
+* [🔵 Premia Blue (V3)](https://app.premia.blue/)
+* [💎 Premia V2 Docs](https://docs.premia.finance/)
