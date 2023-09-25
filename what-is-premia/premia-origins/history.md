@@ -15,6 +15,6 @@ There are currently three versions of the Premia protocol:
 
 <mark style="color:blue;">**Premia v3:**</mark> Concentrated AMM-based options exchange w/ peer-to-peer order network
 
-* Launched early 2023
+* Launched Q3 2023
 
 The protocol has advanced in functionality and efficiency with each new iteration. Previous versions will remain accessible with 100% uptime (even post-deprecation) via the Ethereum blockchain (though some features might not be maintained, such as the volatility surface for each token).
