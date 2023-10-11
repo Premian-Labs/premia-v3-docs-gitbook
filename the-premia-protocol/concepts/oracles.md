@@ -4,7 +4,7 @@
 
 ### Price Feed Overview
 
-In order to create an options market for a given token pair, a valid oracle must be available to determine the value of an option (based on spot price) at expiration. Premia v3 pools can be established out-of-the-box with [Chainlink VWAP Price feeds](oracles.md#chainlink) or [Uniswap v3 TWAP Price feeds](oracles.md#uniswap-v3). Additionally, any Price Oracle implementing the `IOracleAdapter` interface can be used to initialize a new option pool.
+In order to create an options market for a given token pair, a valid oracle must be available to determine the value of an option (based on spot price) at expiration. Premia v3 pools can be established out-of-the-box with Chainlink VWAP Price feeds, RedStone Classic TWAP price feeds or Uniswap v3 TWAP Price feeds. Additionally, any Price Oracle implementing the `IOracleAdapter` interface can be used to initialize a new option pool.
 
 By default, options will be automatically settled by an address maintained by the protocol, but Option holders can at any time designate an `autoSettleAddress` and an `autoMaxSettleFee`. Once set, the `autoSettleAddress` can exercise or settle options for the user after expiration, and be given a credit to compensate for the gas fees associated with making the call.
 
@@ -15,6 +15,14 @@ For convenience a keeper bot is then used to hydrate each pool with its correspo
 Chainlink has many available feeds which can be found [here](https://docs.chain.link/data-feeds/price-feeds/addresses?network=arbitrum). If a direct pair is not available when a pair is upserted to the `ChainlinkAdapter`, an attempt will be made to combine multiple price paths to create a valid price feed.
 
 To _initialize_ a pool, Chainlink is queried with the selected pair, and if a valid market exists, a VWAP price is returned to help determine the `initializationFee`.
+
+### RedStone
+
+RedStone is a Modular Oracle delivering token pricing by fetching price feeds from off-chain sources (CEXes, aggregators) and on-chain sources (DEXes).&#x20;
+
+Its support for all EVM-compatible Layer1s and Layer2s, a lot of customization options (TWAPs, exact pricing at the time of settlement), and multiple available data feeds (long-tail, LP, LST, and Ecosystem-native tokens, as well as custom feeds) offer an advantage to Premia for new markets creation and cross-chain expansion.
+
+For a comprehensive understanding, please refer to the [RedStone Documentation](https://docs.redstone.finance/docs/introduction).
 
 #### Determining Settlement Price
 
