@@ -1,6 +1,6 @@
 # SDK
 
-## Overview
+### <mark style="color:blue;">Overview</mark>
 
 The Premia SDK is available in Typescript and is the codebase can be used to query data stored in smart contracts or to modify data on-chain by signing and executing transactions on-chain.
 

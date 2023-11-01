@@ -1,6 +1,6 @@
 # Guides
 
-## Quick Start
+### <mark style="color:blue;">Quick Start</mark>
 
 The **full SDK** is free to use and open-source, currently available in the following languages:
 
@@ -42,7 +42,7 @@ The Premia v3 SDK is meant to be an all-in-one solution, just instantiate the `P
 * [vaults](https://docs-sdk.premia.finance/classes/VaultAPI.html), interact with all functionalities related to the vaults.
 * [vxPremia](https://docs-sdk.premia.finance/classes/VxPremiaAPI.html), interact with all functionalities related to the vxPremia such as vault votes, user stakes, stake histories, and voting histories.
 
-### Walkthrough
+### <mark style="color:blue;">Walkthrough</mark>
 
 #### Making Trades
 
@@ -98,6 +98,6 @@ const tx_response = await premia.pools.trade(poolAddress, {
 
 There you have it, we've made our first trade on Premia!
 
-### API Reference
+### <mark style="color:blue;">API Reference</mark>
 
 Detailed API documentation is available [here](https://docs-sdk.premia.finance/).
