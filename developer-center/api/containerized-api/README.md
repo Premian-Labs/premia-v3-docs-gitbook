@@ -2,7 +2,11 @@
 
 ### <mark style="color:blue;">Overview</mark>
 
-The containerized API is specifically for traders and institutions who would like to programmatically trade on Premia's orderbook. It includes all the features in the [Orderbook API](../orderbook-api/) (please read this section for better understanding) and abstracts away all other web3 functionality needed for _trading_.  Unlike the Orderbook API, which is hosted by Premia, the Containerized API is self hosted by the individual trader or institution either on a local computer (individual) or cloud service (institution) of choice. &#x20;
+The containerized API is specifically for traders and institutions who would like to programmatically trade on Premia's orderbook. It includes all the features in the [Orderbook API](../orderbook-api/) (please read this section for better understanding of how the orderbook works) and abstracts away all other web3 functionality needed for _trading_.  Unlike the Orderbook API, which is hosted by Premia, the Containerized API is self hosted by the individual trader or institution either on a local computer (individual) or cloud service (institution) of choice. &#x20;
+
+{% hint style="info" %}
+Since this API solely deals with the Orderbook, and functionality around it, is
+{% endhint %}
 
 ### <mark style="color:blue;">Architecture</mark>
 

@@ -2,12 +2,10 @@
 
 ### <mark style="color:blue;">Overview</mark>
 
-The Premia Orderbook API can be used to `Publish` and/or `Get` quotes from the orderbook and RFQ system for any deployed/deployable option pool.   The Orderbook API comprises of both a [REST API](rest-api.md) and a [WEBSOCKET](websocket.md).  There is no centralized dependency to `Publish` or `Get` quotes.  The orderbook API is simply a convenience wrapper around web3 calls.
+The Premia Orderbook API can be used to `Publish` and/or `Get` quotes from the orderbook and RFQ system for any deployed/deployable option pool.   The Orderbook API comprises of both a [REST API](rest-api.md) and a [WEBSOCKET](websocket.md).  There is no centralized dependency to `Publish` or `Get` quotes.  The orderbook API is simply a convenience wrapper around web3 calls so that others do not need to aggregate the data themselves.
 
-If desired, the API is also accessible through the [SDK](broken-reference)  via convenience wrapper functions.  It is not necessary to do direct calls to the API in order to use it.&#x20;
-
-{% hint style="info" %}
-Actions such as [_cancelling_](https://docs-solidity.premia.finance/contracts/pool/IPoolTrade.sol/interface.IPoolTrade.html#cancelquotesob), [_filling_](https://docs-solidity.premia.finance/contracts/pool/IPoolTrade.sol/interface.IPoolTrade.html#fillquoteob), or checking a quotes [fillable](https://docs-solidity.premia.finance/contracts/pool/IPoolTrade.sol/interface.IPoolTrade.html#getquoteobfilledamount) status is done directly via the pool contract for a specific option market on Arbitrum One (see [pool contract](https://docs-solidity.premia.finance/contracts/pool/IPool.sol/interface.IPool.html) for all available actions).  The reason for this is simply because the orderbook is merely a decentralized _broadcasting_ service for quotes.  More details of this architecture can be found [here](../../../the-premia-protocol/concepts/orderbook-and-request-for-quote-rfq.md#arbitrum-one-vs.-arbitrum-nova).
+{% hint style="success" %}
+This API is primarily for the aggregation/display of decentralized orderbook data. Actions such as [_cancelling_](https://docs-solidity.premia.finance/contracts/pool/IPoolTrade.sol/interface.IPoolTrade.html#cancelquotesob), [_filling_](https://docs-solidity.premia.finance/contracts/pool/IPoolTrade.sol/interface.IPoolTrade.html#fillquoteob), or checking a quotes [fillable](https://docs-solidity.premia.finance/contracts/pool/IPoolTrade.sol/interface.IPoolTrade.html#getquoteobfilledamount) status is NOT done through this API. If you are a trader please read through this section and then reference our [Containerized API](../containerized-api/).&#x20;
 {% endhint %}
 
 ### <mark style="color:blue;">API KEY</mark>
