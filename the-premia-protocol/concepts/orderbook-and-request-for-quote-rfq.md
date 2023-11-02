@@ -11,10 +11,10 @@ Why Arbitrum Nova? To be a true decentralized tokens options exchange, Premia be
 Providing _quotes_ for the order book are done through [Arbitrum Nova](https://nova.arbitrum.io/).  Quotes are nothing more than emitted events of order details that are signed by the maker of a transaction that will ultimately process on Arbitrum One.   There are two primary ways to emit quotes to the order book:
 
 1. Directly through the `IOrderbookStream` interface using `add`.  This contract resides on Arbitrum Nova and requires a maker to have an account with an ETH balance to pay for gas fees. &#x20;
-2. Using the [Premia Orderbook API](../../developer-center/api/orderbook-api/),  Premia will publish the quote on Arbitrum Nova on the maker's behalf.   This is a rate-limited / tiered feature.
+2. Using the [Premia Orderbook API](../../developer-center/apis/orderbook-api/),  Premia will publish the quote on Arbitrum Nova on the maker's behalf.   This is a rate-limited / tiered feature.
 
 {% hint style="info" %}
 These orders do **not** earn maker rebates or liquidity mining rewards, ensuring concentrated liquidity and vaults stay competitive long-term.
 {% endhint %}
 
-The order book can be accessed directly via the Premia Blue app, [API](../../developer-center/api/orderbook-api/), or the [SDK](broken-reference). &#x20;
+The order book can be accessed directly via the Premia Blue app, [API](../../developer-center/apis/orderbook-api/), or the [SDK](broken-reference). &#x20;

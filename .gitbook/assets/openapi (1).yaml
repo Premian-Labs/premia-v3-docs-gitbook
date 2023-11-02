@@ -1,84 +1,14 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
-  title: Orderbook Quotes API (OpenAPI 3.0)
-  description: |-
+  title: Premia Orderbook Open API (OpenAPI 3.0)
+  description: Premia containerised API for decentralised orderbook trading, position, and account management.
   license:
     name: Attribution-NonCommercial 3.0
     url: https://creativecommons.org/licenses/by-nc/3.0
   version: 1.0.0
-externalDocs:
-  description: Premia Gitbook
-  url: https://docs.premia.finance
-servers:
-  - url: https://test.orderbook.premia.finance
-tags:
-  - name: http
-    description: HTTPs API
-  - name: websockets
-    description: TBD
 paths:
-  /rfq_quotes:
-    get:
-      tags:
-        - http
-      summary: Get private quotes assigned to user (taker) address
-      parameters:
-        - name: poolAddress
-          in: query
-          description: unique address of the pool
-          required: true
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
-        - name: side
-          in: query
-          description: orderbook side ("ask" or "bid")
-          required: true
-          schema:
-            type: string
-            pattern: "^bid$|^ask$"
-        - name: chainId
-          in: query
-          description: chain id ("42161" or "421613")
-          required: true
-          schema:
-            type: string
-            pattern: "^42161$|^421613$"
-        - name: taker
-          in: query
-          description: taker address
-          required: true
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PostQuotesRequest'
-        '400':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '401':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthError'
-      security:
-        - api_key:
-            - api
-  /quotes:
+  /orderbook/quotes:
     post:
-      tags:
-        - http
       summary: Publishes the quote into the orderbook
       requestBody:
         content:
@@ -86,7 +16,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/PostQuotesRequest'
+                $ref: '#/components/schemas/PublishQuotesRequest'
         required: true
       responses:
         '200':
@@ -96,25 +26,124 @@ paths:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: string
-                    default: 'Quote exists'
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reason:
+                          type: string
+                          enum:
+                            - 'Quote deadline is invalid (cannot be less than 60 sec)'
+                            - 'Failed to fetch pool address'
+                            - QuoteOBExpired
+                            - QuoteOBCancelled
+                            - QuoteOBOverfilled
+                            - OutOfBoundsPrice
+                            - InvalidQuoteOBTaker
+                            - InvalidQuoteOBSignature
+                            - InvalidAssetUpdate
+                            - InsufficientCollateralAllowance
+                            - InsufficientCollateralBalance
+                            - InsufficientLongBalance
+                            - InsufficientShortBalance
+                        invalidQuote:
+                          $ref: '#/components/schemas/ReturnedOrderbookQuote'
+                  exists:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReturnedOrderbookQuote'
         '201':
           description: Quote created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RedisPostQuoteRequest'
+                type: object
+                properties:
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reason:
+                          type: string
+                          enum:
+                            - 'Quote deadline is invalid (cannot be less than 60 sec)'
+                            - 'Failed to fetch pool address'
+                            - QuoteOBExpired
+                            - QuoteOBCancelled
+                            - QuoteOBOverfilled
+                            - OutOfBoundsPrice
+                            - InvalidQuoteOBTaker
+                            - InvalidQuoteOBSignature
+                            - InvalidAssetUpdate
+                            - InsufficientCollateralAllowance
+                            - InsufficientCollateralBalance
+                            - InsufficientLongBalance
+                            - InsufficientShortBalance
+                        invalidQuote:
+                          $ref: '#/components/schemas/ReturnedOrderbookQuote'
+                  exists:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReturnedOrderbookQuote'
+                  created:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReturnedOrderbookQuote'
         '400':
           description: Bad request
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/ValidationError'
-                  - $ref: '#/components/schemas/TTLError'
+                $ref:  '#/components/schemas/ValidationError'
         '401':
-          description: Invalid parameters supplied
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+    patch:
+      summary: Fills the quote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FillQuotesRequest'
+        required: true
+      responses:
+        '200':
+          description: Quotes filled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      type: string
+                      description: filled quote ids
+                      pattern: "[a-fA-F0-9]{64}"
+                  failed:
+                    type: array
+                    items:
+                      type: string
+                      description: failed to fill quote ids
+                      pattern: "[a-fA-F0-9]{64}"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -123,9 +152,7 @@ paths:
         - api_key:
             - api
     delete:
-      tags:
-        - http
-      summary: Publishes the quote from the orderbook
+      summary: Deletes the quote from the orderbook
       requestBody:
         content:
           application/json:
@@ -136,9 +163,27 @@ paths:
         required: true
       responses:
         '200':
-          description: Successful operation
-        '204':
-          description: Quote not found
+          description: Quote cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      type: string
+                      pattern: '[a-fA-F0-9]{64}$'
+                  failed:
+                    type: array
+                    items:
+                      type: string
+                      pattern: '[a-fA-F0-9]{64}$'
+                  omitted:
+                    type: array
+                    items:
+                      type: string
+                      pattern: '[a-fA-F0-9]{64}$'
         '400':
           description: Invalid parameters supplied
           content:
@@ -146,7 +191,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ValidationError'
         '401':
-          description: Invalid parameters supplied
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -155,24 +200,46 @@ paths:
         - api_key:
             - api
     get:
-      tags:
-        - http
       summary: Get best quotes to fill the order parametrised by query params
       parameters:
-        - name: poolAddress
+        - name: base
           in: query
-          description: unique address of the pool
           required: true
           schema:
             type: string
             pattern: "^0x[a-fA-F0-9]{40}$"
+        - name: quote
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: "^0x[a-fA-F0-9]{40}$"
+        - name: expiration
+          in: query
+          required: true
+          description: option expiration date
+          schema:
+            type: string
+            pattern: ^\d\d\w\w\w\d\d$
+        - name: strike
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: type
+          in: query
+          description: option type
+          required: true
+          schema:
+            type: string
+            pattern: ^C$|^P$
         - name: size
           in: query
           description: fill size (1 contract = 1e18)
           required: true
           schema:
-            type: string
-            pattern: "^[0-9]*$"
+            type: number
+            minimum: 0
         - name: side
           in: query
           description: orderbook side ("ask" or "bid")
@@ -180,13 +247,20 @@ paths:
           schema:
             type: string
             pattern: "^bid$|^ask$"
-        - name: chainId
+        - name: provider
           in: query
-          description: chain id ("42161" or "421613")
-          required: true
+          description: unique address of the provider
+          required: false
           schema:
             type: string
-            pattern: "^42161$|^421613$"
+            pattern: "^0x[a-fA-F0-9]{40}$"
+        - name: taker
+          in: query
+          description: unique address of the taker (for rfq quotes)
+          required: false
+          schema:
+            type: string
+            pattern: "^0x[a-fA-F0-9]{40}$"
       responses:
         '200':
           description: Successful operation
@@ -195,7 +269,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PostQuotesRequest'
+                  $ref: '#/components/schemas/ReturnedOrderbookQuote'
         '400':
           description: Invalid parameters supplied
           content:
@@ -203,7 +277,330 @@ paths:
               schema:
                 $ref: '#/components/schemas/ValidationError'
         '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /orderbook/orders:
+    get:
+      summary: Gets quotes by quoteIds
+      parameters:
+        - name: base
+          in: query
+          required: true
+          schema:
+            quoteIds:
+              type: array
+              items:
+                type: string
+                pattern: '[a-fA-F0-9]{64}$'
+              minItems: 1
+              maxItems: 25
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReturnedOrderbookQuote'
+        '400':
           description: Invalid parameters supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /pool/settle:
+    post:
+      summary: Settles options (shorts)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PositionsRequestParams'
+        required: true
+      responses:
+        '200':
+          description: Positions settled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Option'
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        failedOption:
+                          type: object
+                          $ref: '#/components/schemas/Option'
+                        reason:
+                          type: string
+        '400':
+          description: Invalid parameters supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /pool/exercise:
+    post:
+      summary: Exercise options (longs)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PositionsRequestParams'
+        required: true
+      responses:
+        '200':
+          description: Positions exercised
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Option'
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        failedOption:
+                          type: object
+                          $ref: '#/components/schemas/Option'
+                        reason:
+                          type: string
+        '400':
+          description: Invalid parameters supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /pool/annihilate:
+    post:
+      summary: Annihilate options
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PositionsRequestParams'
+        required: true
+      responses:
+        '200':
+          description: Positions annihilated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Option'
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        failedOption:
+                          type: object
+                          $ref: '#/components/schemas/Option'
+                        reason:
+                          type: string
+        '400':
+          description: Invalid parameters supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /account/collateral_approval:
+    post:
+      summary: Approve collateral for trading
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApprovalsRequest'
+        required: true
+      responses:
+        '200':
+          description: Approved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TokenApproval'
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        failedApproval:
+                          type: object
+                          $ref: '#/components/schemas/TokenApproval'
+                        reason:
+                          type: string
+        '400':
+          description: Invalid parameters supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /account/orders:
+    get:
+      summary: Gets all user's quotes
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReturnedOrderbookQuote'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /account/collateral_balances:
+    get:
+      summary: Checks collateral balance
+      responses:
+        '200':
+          description: Approved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TokenBalance'
+                  failed:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        failedBalanceQueries:
+                          type: string
+                        reason:
+                          type: string
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /account/native_balance:
+    get:
+      summary: Checks collateral balance
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: number
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /account/option_balances:
+    get:
+      summary: Checks option balance
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptionPositions'
+        '401':
+          description: Not authorized
           content:
             application/json:
               schema:
@@ -213,104 +610,216 @@ paths:
             - api
 components:
   schemas:
-    RedisPostQuoteRequest:
-      allOf:
-        - $ref: '#/components/schemas/PostQuotesRequest'
-        - properties:
-            quoteId:
-              type: string
-              pattern: "[a-fA-F0-9]{64}"
-          required:
-            - quoteId
-    PostQuotesRequest:
+    Option:
       type: object
       properties:
-        poolKey:
-          type: object
-          properties:
-            base:
-              type: string
-              pattern: '^0x[a-fA-F0-9]{40}$'
-            quote:
-              type: string
-              pattern: '^0x[a-fA-F0-9]{40}$'
-            oracleAdapter:
-              type: string
-              pattern: '^0x[a-fA-F0-9]{40}$'
-            strike:
-              type: string
-            maturity:
-              type: integer
-            isCallPool:
-              type: boolean
-          required:
-            - base
-            - quote
-            - oracleAdapter
-            - strike
-            - maturity
-            - isCallPool
-          additionalProperties: false
-        chainId:
+        base:
           type: string
-          pattern: '^42161$|^421613$'
-        provider:
+        expiration:
           type: string
-          pattern: '^0x[a-fA-F0-9]{40}$'
-        taker:
+          pattern: ^\d\d\w\w\w\d\d$
+        quote:
           type: string
-          pattern: '^0x[a-fA-F0-9]{40}$'
-        price:
+        strike:
+          type: number
+        type:
+          enum:
+            - C
+            - P
+          type: string
+    NFTBalance:
+      type: object
+      properties:
+        amount:
+          type: number
+        name:
+          type: string
+        token_address:
+          type: string
+    OptionPositions:
+      properties:
+        expired:
+          items:
+            $ref: '#/components/schemas/NFTBalance'
+          type: array
+        open:
+          items:
+            $ref: '#/components/schemas/NFTBalance'
+          type: array
+      type: object
+    TokenBalance:
+      type: object
+      properties:
+        balance:
+          oneOf:
+            - type: string
+            - type: number
+        symbol:
+          type: string
+        token_address:
+          type: string
+    TokenApproval:
+      type: object
+      properties:
+        amt:
+          oneOf:
+            - type: string
+              pattern: 'max'
+            - type: number
+        token:
+          type: string
+    ReturnedOrderbookQuote:
+      required:
+        - base
+        - quote
+        - expiration
+        - strike
+        - type
+        - side
+        - size
+        - price
+        - deadline
+      type: object
+      properties:
+        base:
+          type: string
+        quote:
+          type: string
+        expiration:
+          type: string
+          pattern: ^\d\d\w\w\w\d\d$
+        strike:
+          type: number
+        type:
+          enum:
+            - C
+            - P
+          type: string
+        side:
+          enum:
+            - ask
+            - bid
           type: string
         size:
-          type: string
-        isBuy:
-          type: boolean
+          type: number
+        price:
+          type: number
         deadline:
-          type: integer
-        salt:
-          type: integer
-        signature:
-          type: object
-          properties:
-            r:
-              type: string
-            s:
-              type: string
-            v:
-              type: integer
-          required:
-            - r
-            - s
-            - v
-          additionalProperties: false
-      required:
-        - poolKey
-        - chainId
-        - provider
-        - taker
-        - price
-        - size
-        - isBuy
-        - deadline
-        - salt
-        - signature
+          type: number
+        quoteId:
+          type: string
+          pattern: '[a-fA-F0-9]{64}$'
+        ts:
+          type: number
     DeleteQuotesRequest:
       type: object
       properties:
-        quoteId:
-          type: string
-          pattern: "[a-fA-F0-9]{64}"
+        quoteIds:
+          type: array
+          items:
+            type: string
+            pattern: '[a-fA-F0-9]{64}$'
+          minItems: 1
       required:
-        - quoteId
-    TTLError:
-      type: object
-      properties:
-        message:
-          type: string
-          default: 'Quote deadline is invalid (cannot be less than 60 sec)'
-        quote:
-          $ref: '#/components/schemas/PostQuotesRequest'
+        - quoteIds
+    FillQuotesRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          tradeSize:
+            type: number
+            minimum: 0
+          quoteId:
+            type: string
+            pattern: '[a-fA-F0-9]{64}$'
+        required:
+          - size
+          - quoteId
+    PositionsRequestParams:
+      type: array
+      items:
+        type: object
+        properties:
+          base:
+            type: string
+            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          quote:
+            type: string
+            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          expiration:
+            type: string
+            pattern: ^\d\d\w\w\w\d\d$
+          strike:
+            type: number
+          type:
+            type: string
+            pattern: ^C$|^P$
+        required:
+          - base
+          - quote
+          - expiration
+          - strike
+          - type
+    ApprovalsRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          token:
+            type: string
+            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          amt:
+            oneOf:
+              - type: number
+              - type: string
+                pattern: ^max$
+        required:
+          - token
+          - amt
+      minItems: 1
+      maxItems: 8
+    PublishQuotesRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          base:
+            type: string
+            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          quote:
+            type: string
+            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          expiration:
+            type: string
+            pattern: ^\d\d\w\w\w\d\d$
+          strike:
+            type: number
+          type:
+            type: string
+            pattern: ^C$|^P$
+          side:
+            type: string
+            pattern: ^bid$|^ask$
+          size:
+            type: number
+          price:
+            type: number
+          deadline:
+            type: integer
+          taker:
+            type: string
+            pattern: ^0x[a-fA-F0-9]{40}$
+        required:
+          - base
+          - quote
+          - expiration
+          - strike
+          - type
+          - side
+          - size
+          - price
+          - deadline
     AnyValue: {}
     AuthError:
       type: object

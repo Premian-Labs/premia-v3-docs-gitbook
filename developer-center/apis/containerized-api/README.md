@@ -18,4 +18,4 @@ Even if a trader is not familiar with Typescript or Docker, the setup process is
 
 ### <mark style="color:blue;">Setup Instructions</mark>
 
-Detailed setup instructions for the Containerized API can be found directly in the repository README.  Once setup is complete, please review the [API Specification](api-specification.md) in the next section which provides a user friendly guide to accessing all the available endpoints.
+Detailed setup instructions for the Containerized API can be found directly in the repository README.  Once setup is complete, please review the [API Reference](api-reference/) section which provides a user friendly guide to accessing all the available endpoints.

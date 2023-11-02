@@ -31,13 +31,13 @@ It is possible to pay/receive premium/collateral for an option in the token of a
 
 ### Makers
 
-Market Makers can provide quotes to the Orderbook either via [Orderbook API](../../developer-center/api/orderbook-api/) (off-chain) or on-chain via  `add` within the `IOrderbookStream` interface. An on-chain event is emitted with the details of each order. This acts as a transparent/capital efficient database for orders. Off-chain indexers can track the state of the Orderbook through these events.
+Market Makers can provide quotes to the Orderbook either via [Orderbook API](../../developer-center/apis/orderbook-api/) (off-chain) or on-chain via  `add` within the `IOrderbookStream` interface. An on-chain event is emitted with the details of each order. This acts as a transparent/capital efficient database for orders. Off-chain indexers can track the state of the Orderbook through these events.
 
 A quote will have several parameters, among them a `deadline`. The deadline will specify how long a quote will be valid for.  Alternatively, orders can be cancelled using `cancelQuotesOB` in the `IPool` Interface if an order needs to be cancelled before the deadline is reached.  Multiple quotes can be cancelled at once by passing a list of quotes.  Cancelling quotes can only be done on-chain.&#x20;
 
 ### Takers
 
-While takers will _fill_ their order on-chain, the process of _getting_ a quote is done off-chain via the [Orderbook API](../../developer-center/api/orderbook-api/).   We index all quotes in our subgraph, which users can get from the [Orderbook API](../../developer-center/api/orderbook-api/). &#x20;
+While takers will _fill_ their order on-chain, the process of _getting_ a quote is done off-chain via the [Orderbook API](../../developer-center/apis/orderbook-api/).   We index all quotes in our subgraph, which users can get from the [Orderbook API](../../developer-center/apis/orderbook-api/). &#x20;
 
 Once a taker has a quote they would like to fill, the order details need to be passed on-chain. The [fillQuoteOB](https://docs-solidity.premia.finance/contracts/pool/IPoolTrade.sol/interface.IPoolTrade.html#fillquoteob) function can be used to fill a quote using the `IPool` Interface.
 
