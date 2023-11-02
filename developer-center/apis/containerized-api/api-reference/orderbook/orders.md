@@ -1,5 +1,5 @@
 # Orders
 
-{% swagger src="../../../../../.gitbook/assets/openapi (1).yaml" path="/orderbook/orders" method="get" %}
-[openapi (1).yaml](<../../../../../.gitbook/assets/openapi (1).yaml>)
+{% swagger src="../../../../../.gitbook/assets/container.yaml" path="/orderbook/orders" method="get" %}
+[container.yaml](../../../../../.gitbook/assets/container.yaml)
 {% endswagger %}

@@ -9,7 +9,11 @@ info:
 paths:
   /orderbook/quotes:
     post:
-      summary: Publishes the quote into the orderbook
+      summary: Publishes option quote(s) on-chain and into the orderbook. Please note there is no gas that is paid to
+        publish quotes. Deadline is the number of seconds the order is valid for. Price is normalized.  For calls, 
+        price is denominated in the base token (ie 0.13 WETH), and for puts price is in denominated in the 
+        quote token but normalized using strike. For example, a put price of 0.13 => (234 USDC price / 1800 Strike ) 
+        is equivalent to 234 USDC if the strike is 1800.
       requestBody:
         content:
           application/json:
@@ -47,12 +51,14 @@ paths:
                             - InsufficientCollateralBalance
                             - InsufficientLongBalance
                             - InsufficientShortBalance
-                        invalidQuote:
+                        quote:
                           $ref: '#/components/schemas/ReturnedOrderbookQuote'
                   exists:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ReturnedOrderbookQuote'
+                      type: object
+                      properties:
+                        $ref: '#/components/schemas/ReturnedOrderbookQuote'
         '201':
           description: Quote created
           content:
@@ -60,6 +66,12 @@ paths:
               schema:
                 type: object
                 properties:
+                  created:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        $ref: '#/components/schemas/ReturnedOrderbookQuote'
                   failed:
                     type: array
                     items:
@@ -81,16 +93,14 @@ paths:
                             - InsufficientCollateralBalance
                             - InsufficientLongBalance
                             - InsufficientShortBalance
-                        invalidQuote:
+                        quote:
                           $ref: '#/components/schemas/ReturnedOrderbookQuote'
                   exists:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ReturnedOrderbookQuote'
-                  created:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ReturnedOrderbookQuote'
+                      type: object
+                      properties:
+                        $ref: '#/components/schemas/ReturnedOrderbookQuote'
         '400':
           description: Bad request
           content:
@@ -107,7 +117,9 @@ paths:
         - api_key:
             - api
     patch:
-      summary: Fills the quote
+      summary: Used to fill quote(s).  Only the size and quoteId for each quote are required. All quoteIds are 
+        returned either as 'success' or 'failed'. Each limit order that is trying to be filled is an "all or nothing"
+        attempt.
       requestBody:
         content:
           application/json:
@@ -130,12 +142,14 @@ paths:
                       type: string
                       description: filled quote ids
                       pattern: "[a-fA-F0-9]{64}"
+                      example: ba638...fb25e
                   failed:
                     type: array
                     items:
                       type: string
                       description: failed to fill quote ids
                       pattern: "[a-fA-F0-9]{64}"
+                      example: ba638...fb25e
         '400':
           description: Bad request
           content:
@@ -152,7 +166,9 @@ paths:
         - api_key:
             - api
     delete:
-      summary: Deletes the quote from the orderbook
+      summary: Deletes the quote(s) from the orderbook that have not exceeded their deadline.  Please note that 
+        orders that have surpassed their deadline do NOT need to be cancelled.  They are automatically removed from
+        the orderbook and are unfillable on-chain. Cancelling orders does incur on-chain gas fees.
       requestBody:
         content:
           application/json:
@@ -174,16 +190,19 @@ paths:
                     items:
                       type: string
                       pattern: '[a-fA-F0-9]{64}$'
+                      example: ba638...fb25e
                   failed:
                     type: array
                     items:
                       type: string
                       pattern: '[a-fA-F0-9]{64}$'
+                      example: ba638...fb25e
                   omitted:
                     type: array
                     items:
                       type: string
                       pattern: '[a-fA-F0-9]{64}$'
+                      example: ba638...fb25e
         '400':
           description: Invalid parameters supplied
           content:
@@ -200,63 +219,76 @@ paths:
         - api_key:
             - api
     get:
-      summary: Get best quotes to fill the order parametrised by query params
+      summary: Get all quotes for a specific option up to a specified size/qty.   All orders will be ranked from best
+        to worst according to price. Please note that this will not show the full state of the orderbook if the total
+        market liquidity is greater than the size specified.
       parameters:
         - name: base
           in: query
           required: true
+          description: base token symbol (ie WETH)
           schema:
             type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
+            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+            example: WETH
         - name: quote
           in: query
           required: true
+          description: quote token symbol (ie USDC)
           schema:
             type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
+            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+            example: USDC
         - name: expiration
           in: query
           required: true
-          description: option expiration date
+          description: option expiration (ie 03NOV23)
           schema:
             type: string
             pattern: ^\d\d\w\w\w\d\d$
+            example: 03NOV23
         - name: strike
           in: query
           required: true
+          description: option strike (ie 1800)
           schema:
             type: number
+            minimum: 0
+            example: 1800
         - name: type
           in: query
-          description: option type
+          description: C or P
           required: true
           schema:
             type: string
             pattern: ^C$|^P$
+            example: P
         - name: size
           in: query
-          description: fill size (1 contract = 1e18)
+          description: number of contracts (ie 4)
           required: true
           schema:
             type: number
             minimum: 0
+            example: 3
         - name: side
           in: query
-          description: orderbook side ("ask" or "bid")
+          description: orderbook side (ie bid)
           required: true
           schema:
             type: string
             pattern: "^bid$|^ask$"
+            example: bid
         - name: provider
           in: query
-          description: unique address of the provider
+          description: unique address of the provider (maker)
           required: false
           schema:
             type: string
             pattern: "^0x[a-fA-F0-9]{40}$"
         - name: taker
           in: query
-          description: unique address of the taker (for rfq quotes)
+          description: unique address of the taker (only for rfq quotes)
           required: false
           schema:
             type: string
@@ -287,17 +319,20 @@ paths:
             - api
   /orderbook/orders:
     get:
-      summary: Gets quotes by quoteIds
+      summary: Gets quote(s) by quoteId(s).  Note that a max of 25 quoteIds can be queried in a single request. The 
+        query param should be a key:value object with quoteIds as the key and an array of quoteIds as the value.
       parameters:
-        - name: base
+        - name: quoteIds
           in: query
           required: true
+          description:  "quoteIds: [ba638...fb25e]"
           schema:
             quoteIds:
               type: array
               items:
                 type: string
                 pattern: '[a-fA-F0-9]{64}$'
+                example: ba638...fb25e
               minItems: 1
               maxItems: 25
       responses:
@@ -326,7 +361,7 @@ paths:
             - api
   /pool/settle:
     post:
-      summary: Settles options (shorts)
+      summary: Settles all short positions in each specified option in the request.
       requestBody:
         content:
           application/json:
@@ -374,14 +409,13 @@ paths:
             - api
   /pool/exercise:
     post:
-      summary: Exercise options (longs)
+      summary: Exercises all long positions in each specified option in the request. Please note that there is a fee 
+        to exercise options.
       requestBody:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/PositionsRequestParams'
+              $ref: '#/components/schemas/PositionsRequestParams'
         required: true
       responses:
         '200':
@@ -422,14 +456,14 @@ paths:
             - api
   /pool/annihilate:
     post:
-      summary: Annihilate options
+      summary: Annihilates all long/short positions that offset in each specified option in the request. Please note 
+        that it should be rare to need this endpoint when using only the orderbook. This is more applicable when 
+        there is peer to peer transfers or account consolidations (transactions that do not go through the orderbook).
       requestBody:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/PositionsRequestParams'
+              $ref: '#/components/schemas/PositionsRequestParams'
         required: true
       responses:
         '200':
@@ -470,14 +504,15 @@ paths:
             - api
   /account/collateral_approval:
     post:
-      summary: Approve collateral for trading
+      summary: Approve collateral for trading.  The `amt` field can be either a number or a string `max`.  Setting 
+        the approval to max will ensure no approvals are needed prior to a trade. This may also save gas costs and 
+        reduce code complexity.  Alternatively, it is possible to approve only the amount intended to be traded (plus
+        trading fees if applicable) for each order quoted or filled.
       requestBody:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/ApprovalsRequest'
+              $ref: '#/components/schemas/ApprovalsRequest'
         required: true
       responses:
         '200':
@@ -518,7 +553,8 @@ paths:
             - api
   /account/orders:
     get:
-      summary: Gets all user's quotes
+      summary: Gets all open quotes.  Any valid orders that are fillable and present in the orderbook for the address
+        used for the containerized API will be returned. The address used is the one specified in the .env file.
       responses:
         '200':
           description: Successful operation
@@ -539,7 +575,7 @@ paths:
             - api
   /account/collateral_balances:
     get:
-      summary: Checks collateral balance
+      summary: Checks collateral balance for all tokens that have tradeable option markets.
       responses:
         '200':
           description: Approved
@@ -572,7 +608,7 @@ paths:
             - api
   /account/native_balance:
     get:
-      summary: Checks collateral balance
+      summary: Checks the balance of ETH for the given account specified in the .env file.
       responses:
         '200':
           description: Success
@@ -591,7 +627,7 @@ paths:
             - api
   /account/option_balances:
     get:
-      summary: Checks option balance
+      summary: Checks the balance of all option positions for the given account specified in the .env file.
       responses:
         '200':
           description: Success
@@ -615,18 +651,25 @@ components:
       properties:
         base:
           type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: WETH
+        quote:
+          type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: USDC
         expiration:
           type: string
           pattern: ^\d\d\w\w\w\d\d$
-        quote:
-          type: string
+          example: 03NOV23
         strike:
           type: number
+          example: 1700
         type:
           enum:
             - C
             - P
           type: string
+          example: P
     NFTBalance:
       type: object
       properties:
@@ -654,20 +697,28 @@ components:
           oneOf:
             - type: string
             - type: number
+          example: 2.345
         symbol:
           type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: WETH
         token_address:
           type: string
+          pattern: ^0x[a-fA-F0-9]{40}$
+          example: 0x...4cFF2
     TokenApproval:
       type: object
       properties:
-        amt:
-          oneOf:
-            - type: string
-              pattern: 'max'
-            - type: number
         token:
           type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: WETH
+        amt:
+          oneOf:
+            - type: number
+            - type: string
+              pattern: ^max$
+          example: max
     ReturnedOrderbookQuote:
       required:
         - base
@@ -683,34 +734,47 @@ components:
       properties:
         base:
           type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: WETH
         quote:
           type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: USDC
         expiration:
           type: string
           pattern: ^\d\d\w\w\w\d\d$
+          example: 03NOV23
         strike:
           type: number
+          example: 1700
         type:
           enum:
             - C
             - P
           type: string
+          example: P
         side:
           enum:
             - ask
             - bid
           type: string
+          example: bid
         size:
           type: number
+          example: 3
         price:
           type: number
+          example: .15
         deadline:
           type: number
+          example: 184
         quoteId:
           type: string
           pattern: '[a-fA-F0-9]{64}$'
+          example: ba638...fb25e
         ts:
           type: number
+          example: 1698952534
     DeleteQuotesRequest:
       type: object
       properties:
@@ -719,48 +783,52 @@ components:
           items:
             type: string
             pattern: '[a-fA-F0-9]{64}$'
+            example: ba638...fb25e
           minItems: 1
       required:
         - quoteIds
     FillQuotesRequest:
-      type: array
-      items:
-        type: object
-        properties:
-          tradeSize:
-            type: number
-            minimum: 0
-          quoteId:
-            type: string
-            pattern: '[a-fA-F0-9]{64}$'
-        required:
-          - size
-          - quoteId
+      type: object
+      properties:
+        tradeSize:
+          type: number
+          minimum: 0
+          example: 4
+        quoteId:
+          type: string
+          pattern: '[a-fA-F0-9]{64}$'
+          example: ba638...fb25e
+      required:
+        - size
+        - quoteId
     PositionsRequestParams:
-      type: array
-      items:
-        type: object
-        properties:
-          base:
-            type: string
-            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
-          quote:
-            type: string
-            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
-          expiration:
-            type: string
-            pattern: ^\d\d\w\w\w\d\d$
-          strike:
-            type: number
-          type:
-            type: string
-            pattern: ^C$|^P$
-        required:
-          - base
-          - quote
-          - expiration
-          - strike
-          - type
+      type: object
+      properties:
+        base:
+          type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: WETH
+        quote:
+          type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: USDC
+        expiration:
+          type: string
+          pattern: ^\d\d\w\w\w\d\d$
+          example: 03NOV23
+        strike:
+          type: number
+          example: 1700
+        type:
+          type: string
+          pattern: ^C$|^P$
+          example: C
+      required:
+        - base
+        - quote
+        - expiration
+        - strike
+        - type
     ApprovalsRequest:
       type: array
       items:
@@ -768,58 +836,68 @@ components:
         properties:
           token:
             type: string
-            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+            pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+            example: WETH
           amt:
             oneOf:
               - type: number
               - type: string
                 pattern: ^max$
+            example: max
         required:
           - token
           - amt
       minItems: 1
       maxItems: 8
     PublishQuotesRequest:
-      type: array
-      items:
-        type: object
-        properties:
-          base:
-            type: string
-            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
-          quote:
-            type: string
-            pattern: ^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
-          expiration:
-            type: string
-            pattern: ^\d\d\w\w\w\d\d$
-          strike:
-            type: number
-          type:
-            type: string
-            pattern: ^C$|^P$
-          side:
-            type: string
-            pattern: ^bid$|^ask$
-          size:
-            type: number
-          price:
-            type: number
-          deadline:
-            type: integer
-          taker:
-            type: string
-            pattern: ^0x[a-fA-F0-9]{40}$
-        required:
-          - base
-          - quote
-          - expiration
-          - strike
-          - type
-          - side
-          - size
-          - price
-          - deadline
+      type: object
+      properties:
+        base:
+          type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: WETH
+        quote:
+          type: string
+          pattern: ^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$
+          example: USDC
+        expiration:
+          type: string
+          pattern: ^\d\d\w\w\w\d\d$
+          example: 03NOV23
+        strike:
+          type: number
+          example: 1800
+        type:
+          type: string
+          pattern: ^C$|^P$
+          example: P
+        side:
+          type: string
+          pattern: ^bid$|^ask$
+          example: bid
+        size:
+          type: number
+          example: 4
+        price:
+          type: number
+          example: .13
+        deadline:
+          type: integer
+          example: 120
+        taker:
+          type: string
+          pattern: ^0x[a-fA-F0-9]{40}$
+          example: 0x...4cFF2
+      required:
+        - base
+        - quote
+        - expiration
+        - strike
+        - type
+        - side
+        - size
+        - price
+        - deadline
     AnyValue: {}
     AuthError:
       type: object

@@ -1,5 +1,5 @@
 # Annihilate
 
-{% swagger src="../../../../../.gitbook/assets/openapi (1).yaml" path="/pool/annihilate" method="post" %}
-[openapi (1).yaml](<../../../../../.gitbook/assets/openapi (1).yaml>)
+{% swagger src="../../../../../.gitbook/assets/container.yaml" path="/pool/annihilate" method="post" %}
+[container.yaml](../../../../../.gitbook/assets/container.yaml)
 {% endswagger %}

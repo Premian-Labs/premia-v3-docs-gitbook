@@ -1,17 +1,17 @@
 # Quotes
 
-{% swagger src="../../../../../.gitbook/assets/openapi (1).yaml" path="/orderbook/quotes" method="get" %}
-[openapi (1).yaml](<../../../../../.gitbook/assets/openapi (1).yaml>)
+{% swagger src="../../../../../.gitbook/assets/container.yaml" path="/orderbook/quotes" method="get" %}
+[container.yaml](../../../../../.gitbook/assets/container.yaml)
 {% endswagger %}
 
-{% swagger src="../../../../../.gitbook/assets/openapi (1).yaml" path="/orderbook/quotes" method="post" %}
-[openapi (1).yaml](<../../../../../.gitbook/assets/openapi (1).yaml>)
+{% swagger src="../../../../../.gitbook/assets/container.yaml" path="/orderbook/quotes" method="post" %}
+[container.yaml](../../../../../.gitbook/assets/container.yaml)
 {% endswagger %}
 
-{% swagger src="../../../../../.gitbook/assets/openapi (1).yaml" path="/orderbook/quotes" method="delete" %}
-[openapi (1).yaml](<../../../../../.gitbook/assets/openapi (1).yaml>)
+{% swagger src="../../../../../.gitbook/assets/container.yaml" path="/orderbook/quotes" method="delete" %}
+[container.yaml](../../../../../.gitbook/assets/container.yaml)
 {% endswagger %}
 
-{% swagger src="../../../../../.gitbook/assets/openapi (1).yaml" path="/orderbook/quotes" method="patch" %}
-[openapi (1).yaml](<../../../../../.gitbook/assets/openapi (1).yaml>)
+{% swagger src="../../../../../.gitbook/assets/container.yaml" path="/orderbook/quotes" method="patch" %}
+[container.yaml](../../../../../.gitbook/assets/container.yaml)
 {% endswagger %}
