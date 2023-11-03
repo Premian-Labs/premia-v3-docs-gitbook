@@ -17,64 +17,6 @@ tags:
   - name: websockets
     description: TBD
 paths:
-  /rfq_quotes:
-    get:
-      tags:
-        - http
-      summary: Get private quotes assigned to user (taker) address
-      parameters:
-        - name: poolAddress
-          in: query
-          description: unique address of the pool
-          required: true
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
-        - name: side
-          in: query
-          description: orderbook side ("ask" or "bid")
-          required: true
-          schema:
-            type: string
-            pattern: "^bid$|^ask$"
-        - name: chainId
-          in: query
-          description: chain id ("42161" or "421613")
-          required: true
-          schema:
-            type: string
-            pattern: "^42161$|^421613$"
-        - name: taker
-          in: query
-          description: taker address
-          required: true
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PostQuotesRequest'
-        '400':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '401':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthError'
-      security:
-        - api_key:
-            - api
   /quotes:
     post:
       tags:
@@ -113,12 +55,6 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/ValidationError'
                   - $ref: '#/components/schemas/TTLError'
-        '401':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthError'
       security:
         - api_key:
             - api
@@ -145,12 +81,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationError'
-        '401':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthError'
       security:
         - api_key:
             - api
@@ -187,13 +117,6 @@ paths:
           schema:
             type: string
             pattern: "^42161$|^421613$"
-        - name: provider
-          in: query
-          description: unique address of the provider
-          required: false
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
       responses:
         '200':
           description: Successful operation
@@ -209,77 +132,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationError'
-        '401':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthError'
-      security:
-        - api_key:
-            - api
-  /orders:
-    get:
-      tags:
-        - http
-      summary: Get all quotes available using query params
-      parameters:
-        - name: poolAddress
-          in: query
-          description: unique address of the pool
-          required: false
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
-        - name: size
-          in: query
-          description: min order size (1 contract = 1e18)
-          required: false
-          schema:
-            type: string
-            pattern: "^[0-9]*$"
-        - name: side
-          in: query
-          description: orderbook side ("ask" or "bid")
-          required: false
-          schema:
-            type: string
-            pattern: "^bid$|^ask$"
-        - name: chainId
-          in: query
-          description: chain id ("42161" or "421613")
-          required: true
-          schema:
-            type: string
-            pattern: "^42161$|^421613$"
-        - name: provider
-          in: query
-          description: unique address of the provider
-          required: false
-          schema:
-            type: string
-            pattern: "^0x[a-fA-F0-9]{40}$"
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PostQuotesRequest'
-        '400':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '401':
-          description: Invalid parameters supplied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthError'
       security:
         - api_key:
             - api
@@ -384,12 +236,6 @@ components:
         quote:
           $ref: '#/components/schemas/PostQuotesRequest'
     AnyValue: {}
-    AuthError:
-      type: object
-      properties:
-        message:
-          type: string
-          default: 'Invalid API key'
     ValidationError:
       type: array
       items:
@@ -406,5 +252,5 @@ components:
   securitySchemes:
     api_key:
       type: apiKey
-      name: x-apikey
+      name: api_key
       in: header

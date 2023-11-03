@@ -233,7 +233,7 @@ paths:
             pattern: "^0x[a-fA-F0-9]{40}$"
         - name: size
           in: query
-          description: min order size (1 contract = 1e18)
+          description: min order size of each order (1 contract = 1e18)
           required: false
           schema:
             type: string

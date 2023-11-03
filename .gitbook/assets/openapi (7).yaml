@@ -563,7 +563,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        failedBalanceQueries:
+                        failedBalanceQuery:
                           type: string
                         reason:
                           type: string
@@ -586,6 +586,7 @@ paths:
             application/json:
               schema:
                 type: number
+                example: 13.4556
         '401':
           description: Not authorized
           content:
@@ -882,6 +883,9 @@ components:
           $ref: '#/components/schemas/TokenApproval'
         reason:
           type: string
+      required:
+        - failedApproval
+        - reason
     AnyValue: {}
     AuthError:
       type: object
@@ -899,7 +903,7 @@ components:
           dataPath:
             type: string
           params:
-            $ref: '#/components/schemas/AnyValue'
+            type: {}
           message:
             type: string
   securitySchemes:

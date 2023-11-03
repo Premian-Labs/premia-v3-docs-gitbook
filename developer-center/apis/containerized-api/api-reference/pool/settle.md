@@ -1,5 +1,5 @@
 # Settle
 
-{% swagger src="../../../../../.gitbook/assets/container.yaml" path="/pool/settle" method="post" %}
-[container.yaml](../../../../../.gitbook/assets/container.yaml)
+{% swagger src="../../../../../.gitbook/assets/openapi (6).yaml" path="/pool/settle" method="post" %}
+[openapi (6).yaml](<../../../../../.gitbook/assets/openapi (6).yaml>)
 {% endswagger %}

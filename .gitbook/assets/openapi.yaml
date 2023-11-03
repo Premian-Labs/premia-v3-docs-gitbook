@@ -379,7 +379,13 @@ paths:
                   failed:
                     type: array
                     items:
-                      $ref: '#/components/schemas/FailedOptions'
+                      type: object
+                      properties:
+                        failedOption:
+                          type: object
+                          $ref: '#/components/schemas/Option'
+                        reason:
+                          type: string
         '400':
           description: Invalid parameters supplied
           content:
@@ -420,7 +426,13 @@ paths:
                   failed:
                     type: array
                     items:
-                      $ref: '#/components/schemas/FailedOptions'
+                      type: object
+                      properties:
+                        failedOption:
+                          type: object
+                          $ref: '#/components/schemas/Option'
+                        reason:
+                          type: string
         '400':
           description: Invalid parameters supplied
           content:
@@ -462,7 +474,13 @@ paths:
                   failed:
                     type: array
                     items:
-                      $ref: '#/components/schemas/FailedOptions'
+                      type: object
+                      properties:
+                        failedOption:
+                          type: object
+                          $ref: '#/components/schemas/Option'
+                        reason:
+                          type: string
         '400':
           description: Invalid parameters supplied
           content:
@@ -505,7 +523,13 @@ paths:
                   failed:
                     type: array
                     items:
-                      $ref: '#/components/schemas/FailedApproval'
+                      type: object
+                      properties:
+                        failedApproval:
+                          type: object
+                          $ref: '#/components/schemas/TokenApproval'
+                        reason:
+                          type: string
         '400':
           description: Invalid parameters supplied
           content:
@@ -868,20 +892,6 @@ components:
         - size
         - price
         - deadline
-    FailedOptions:
-      type: object
-      properties:
-        failedOption:
-          $ref: '#/components/schemas/Option'
-        reason:
-          type: string
-    FailedApproval:
-      type: object
-      properties:
-        failedApproval:
-          $ref: '#/components/schemas/TokenApproval'
-        reason:
-          type: string
     AnyValue: {}
     AuthError:
       type: object

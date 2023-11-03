@@ -89,8 +89,8 @@ When using `GET` quotes, orders are returned based on the params details provide
 
 Additionally, it is possible to receive RFQ quotes  along with public quotes by specifying a `taker` address.  The allows users to find the best possible public/private quote combination for a particular quote size.
 
-{% swagger src="../../../.gitbook/assets/openapi (5).yaml" path="/quotes" method="get" %}
-[openapi (5).yaml](<../../../.gitbook/assets/openapi (5).yaml>)
+{% swagger src="../../../.gitbook/assets/openapi (5) (1).yaml" path="/quotes" method="get" %}
+[openapi (5) (1).yaml](<../../../.gitbook/assets/openapi (5) (1).yaml>)
 {% endswagger %}
 
 {% tabs %}
@@ -198,8 +198,8 @@ getRfqQuotes(poolAddress, side, chainId, takerAddress)
 Good To Know: `size` param in `GET` orders is not the same as `size` param in `GET` quotes. See param descriptions.
 {% endhint %}
 
-{% swagger src="../../../.gitbook/assets/openapi (3).yaml" path="/orders" method="get" %}
-[openapi (3).yaml](<../../../.gitbook/assets/openapi (3).yaml>)
+{% swagger src="../../../.gitbook/assets/openapi (3) (1).yaml" path="/orders" method="get" %}
+[openapi (3) (1).yaml](<../../../.gitbook/assets/openapi (3) (1).yaml>)
 {% endswagger %}
 
 {% tabs %}
