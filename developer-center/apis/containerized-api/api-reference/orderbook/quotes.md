@@ -1,17 +1,17 @@
 # Quotes
 
-{% swagger src="../../../../../.gitbook/assets/openapi (6).yaml" path="/orderbook/quotes" method="get" %}
-[openapi (6).yaml](<../../../../../.gitbook/assets/openapi (6).yaml>)
+{% swagger src="../../../../../.gitbook/assets/openapi3_1.yaml" path="/orderbook/quotes" method="get" %}
+[openapi3_1.yaml](../../../../../.gitbook/assets/openapi3_1.yaml)
 {% endswagger %}
 
-{% swagger src="../../../../../.gitbook/assets/openapi (6).yaml" path="/orderbook/quotes" method="post" %}
-[openapi (6).yaml](<../../../../../.gitbook/assets/openapi (6).yaml>)
+{% swagger src="../../../../../.gitbook/assets/openapi3_1.yaml" path="/orderbook/quotes" method="post" %}
+[openapi3_1.yaml](../../../../../.gitbook/assets/openapi3_1.yaml)
 {% endswagger %}
 
-{% swagger src="../../../../../.gitbook/assets/openapi (6).yaml" path="/orderbook/quotes" method="delete" %}
-[openapi (6).yaml](<../../../../../.gitbook/assets/openapi (6).yaml>)
+{% swagger src="../../../../../.gitbook/assets/openapi3_1.yaml" path="/orderbook/quotes" method="delete" %}
+[openapi3_1.yaml](../../../../../.gitbook/assets/openapi3_1.yaml)
 {% endswagger %}
 
-{% swagger src="../../../../../.gitbook/assets/openapi (6).yaml" path="/orderbook/quotes" method="patch" %}
-[openapi (6).yaml](<../../../../../.gitbook/assets/openapi (6).yaml>)
+{% swagger src="../../../../../.gitbook/assets/openapi3_1.yaml" path="/orderbook/quotes" method="patch" %}
+[openapi3_1.yaml](../../../../../.gitbook/assets/openapi3_1.yaml)
 {% endswagger %}
