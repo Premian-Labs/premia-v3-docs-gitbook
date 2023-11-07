@@ -122,8 +122,54 @@ const webSocketFilter: FilterMessage = {
   }
 }
 
+// Quote events messages types
+interface PostQuoteMessage {
+  type: 'POST_QUOTE'
+  body: OrderbookQuote
+}
+
+interface FillQuoteMessage {
+  type: 'FILL_QUOTE'
+  body: OrderbookQuote
+  size: string
+}
+
+interface DeleteQuoteMessage {
+  type: 'DELETE_QUOTE'
+  body: OrderbookQuote
+}
+
+// Quote object
+export interface RedisQuote {
+  poolKey: {
+    base: string
+    quote: string
+    oracleAdapter: string
+    strike: string
+    maturity: number
+    isCallPool: boolean
+  }
+  provider: string
+  taker: string
+  price: string
+  size: string
+  isBuy: boolean
+  deadline: number
+  salt: number
+  signature: {
+    r: string
+    s: string
+    v: number
+  }
+  chainId: string
+  poolAddress: string
+  quoteId: string
+  fillableSize: string
+  ts: number
+}
+
 const wsCallback = (data: RawData) => {
-  const message: InfoMessage | ErrorMessage | RFQMessage = JSON.parse(data.toString())
+  const message: InfoMessage | PostQuoteMessage | FillQuoteMessage | DeleteQuoteMessage = JSON.parse(data.toString())
   // implement your business logic
 }
 
@@ -183,7 +229,6 @@ interface ErrorMessage {
   body: null
   message: string
 }
-
 
 interface RFQMessage {
   type: 'RFQ'
