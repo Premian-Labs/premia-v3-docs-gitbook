@@ -74,6 +74,7 @@
         * [Collateral Balances](developer-center/apis/containerized-api/api-reference/account/collateral-balances.md)
         * [Native Balance](developer-center/apis/containerized-api/api-reference/account/native-balance.md)
         * [Option Balances](developer-center/apis/containerized-api/api-reference/account/option-balances.md)
+    * [WebSockets Reference](developer-center/apis/containerized-api/websockets-reference.md)
 * [SDK](developer-center/sdk/README.md)
   * [Guides](developer-center/sdk/guides.md)
   * [SDK Technical Docs](developer-center/sdk/sdk-technical-docs.md)
