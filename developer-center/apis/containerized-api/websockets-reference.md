@@ -61,7 +61,7 @@ wsConnection.off('message', wsCallback)
 
 ### <mark style="color:blue;">Subscribe to Quotes (Orderbook & RFQ)</mark>
 
-Subscribing to quotes allows a user to stream real time quotes that are published to the orderbook along with any private quotes that may also be available from an [RFQ request](websockets-reference.md#publish-rfq-request-s).  By default, ALL public quotes are subscribed to upon authorization of a websocket connection. `FILTER` messages are required.
+Subscribing to quotes allows a user to stream real time quotes that are published to the orderbook along with any private quotes that may also be available from an [RFQ request](websockets-reference.md#publish-rfq-request-s).  By default, ALL public quotes are subscribed to upon authorization of a websocket connection. `FILTER` message are required to start listening to orderbook _quotes events_: a quote published, filled or cancelled.
 
 {% tabs %}
 {% tab title="Subscribe to Quotes Stream Exmaple" %}
