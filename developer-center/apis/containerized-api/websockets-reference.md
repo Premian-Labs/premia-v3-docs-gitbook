@@ -125,46 +125,32 @@ const webSocketFilter: FilterMessage = {
 // Quote events messages types
 interface PostQuoteMessage {
   type: 'POST_QUOTE'
-  body: OrderbookQuote
+  body: ReturnedOrderbookQuote
 }
 
 interface FillQuoteMessage {
   type: 'FILL_QUOTE'
-  body: OrderbookQuote
+  body: ReturnedOrderbookQuote
   size: string
 }
 
 interface DeleteQuoteMessage {
   type: 'DELETE_QUOTE'
-  body: OrderbookQuote
+  body: ReturnedOrderbookQuote
 }
 
 // Quote object
-export interface RedisQuote {
-  poolKey: {
-    base: string
-    quote: string
-    oracleAdapter: string
-    strike: string
-    maturity: number
-    isCallPool: boolean
-  }
-  provider: string
-  taker: string
-  price: string
-  size: string
-  isBuy: boolean
+interface ReturnedOrderbookQuote {
+  base: string // token name
+  quote: string // token name
+  expiration: string
+  strike: number
+  type: 'C' | 'P'
+  side: 'bid' | 'ask'
+  size: number
+  price: number
   deadline: number
-  salt: number
-  signature: {
-    r: string
-    s: string
-    v: number
-  }
-  chainId: string
-  poolAddress: string
   quoteId: string
-  fillableSize: string
   ts: number
 }
 
