@@ -21,11 +21,9 @@
                 "properties":
                   "base":
                     "type": "string"
-                    "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                     "example": "WETH"
                   "quote":
                     "type": "string"
-                    "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                     "example": "USDC"
                   "expiration":
                     "type": "string"
@@ -110,11 +108,9 @@
                           "properties":
                             "base":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "WETH"
                             "quote":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "USDC"
                             "expiration":
                               "type": "string"
@@ -168,11 +164,9 @@
                       "properties":
                         "base":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "WETH"
                         "quote":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "USDC"
                         "expiration":
                           "type": "string"
@@ -233,11 +227,9 @@
                       "properties":
                         "base":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "WETH"
                         "quote":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "USDC"
                         "expiration":
                           "type": "string"
@@ -310,11 +302,9 @@
                           "properties":
                             "base":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "WETH"
                             "quote":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "USDC"
                             "expiration":
                               "type": "string"
@@ -368,11 +358,9 @@
                       "properties":
                         "base":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "WETH"
                         "quote":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "USDC"
                         "expiration":
                           "type": "string"
@@ -423,7 +411,7 @@
                     "dataPath":
                       "type": "string"
                     "params":
-                      "type": "string"
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -459,7 +447,7 @@
                     "pattern": "[a-fA-F0-9]{64}$"
                     "example": "ba638...fb25e"
                 "required":
-                  - "size"
+                  - "tradeSize"
                   - "quoteId"
         "required": true
       "responses":
@@ -498,7 +486,7 @@
                     "dataPath":
                       "type": "string"
                     "params":
-                      "type": "string"
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -575,7 +563,7 @@
                     "dataPath":
                       "type": "string"
                     "params":
-                      "type": "string"
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -698,11 +686,9 @@
                   "properties":
                     "base":
                       "type": "string"
-                      "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                       "example": "WETH"
                     "quote":
                       "type": "string"
-                      "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                       "example": "USDC"
                     "expiration":
                       "type": "string"
@@ -753,7 +739,256 @@
                     "dataPath":
                       "type": "string"
                     "params":
+                      "type": "object"
+                    "message":
                       "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/pools":
+    "post":
+      "summary": "Creates new option pools."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "array"
+              "items":
+                "type": "object"
+                "properties":
+                  "base":
+                    "type": "string"
+                    "example": "WETH"
+                  "quote":
+                    "type": "string"
+                    "example": "USDC"
+                  "expiration":
+                    "type": "string"
+                    "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                    "example": "03NOV23"
+                  "strike":
+                    "type": "number"
+                    "example": 1700
+                  "type":
+                    "enum":
+                      - "C"
+                      - "P"
+                    "type": "string"
+                    "example": "P"
+        "required": true
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "allOf":
+                        -
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                      "properties":
+                        "poolAddress":
+                          "type": "string"
+                          "example": "0x...4cFF2"
+                  "existed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "allOf":
+                        -
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                      "properties":
+                        "poolAddress":
+                          "type": "string"
+                          "example": "0x...4cFF2"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+    "get":
+      "summary": "Returns all active pool up to 90 days old."
+      "parameters":
+        -
+          "name": "base"
+          "in": "query"
+          "required": false
+          "description": "base token symbol (ie WETH)"
+          "schema":
+            "type": "string"
+            "pattern": "^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
+            "example": "WETH"
+        -
+          "name": "quote"
+          "in": "query"
+          "required": false
+          "description": "quote token symbol (ie USDC)"
+          "schema":
+            "type": "string"
+            "pattern": "^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
+            "example": "USDC"
+        -
+          "name": "expiration"
+          "in": "query"
+          "required": false
+          "description": "option expiration (ie 03NOV23)"
+          "schema":
+            "type": "string"
+            "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+            "example": "03NOV23"
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "allOf":
+                    -
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+                  "properties":
+                    "poolAddress":
+                      "type": "string"
+                      "example": "0x...4cFF2"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -810,11 +1045,9 @@
                   "properties":
                     "base":
                       "type": "string"
-                      "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                       "example": "WETH"
                     "quote":
                       "type": "string"
-                      "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                       "example": "USDC"
                     "expiration":
                       "type": "string"
@@ -865,7 +1098,7 @@
                     "dataPath":
                       "type": "string"
                     "params":
-                      "type": "string"
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -895,11 +1128,9 @@
                 "properties":
                   "base":
                     "type": "string"
-                    "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                     "example": "WETH"
                   "quote":
                     "type": "string"
-                    "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                     "example": "USDC"
                   "expiration":
                     "type": "string"
@@ -934,11 +1165,9 @@
                       "properties":
                         "base":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "WETH"
                         "quote":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "USDC"
                         "expiration":
                           "type": "string"
@@ -963,11 +1192,9 @@
                           "properties":
                             "base":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "WETH"
                             "quote":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "USDC"
                             "expiration":
                               "type": "string"
@@ -998,7 +1225,7 @@
                     "dataPath":
                       "type": "string"
                     "params":
-                      "type": "string"
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -1026,11 +1253,9 @@
               "properties":
                 "base":
                   "type": "string"
-                  "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                   "example": "WETH"
                 "quote":
                   "type": "string"
-                  "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                   "example": "USDC"
                 "expiration":
                   "type": "string"
@@ -1065,11 +1290,9 @@
                       "properties":
                         "base":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "WETH"
                         "quote":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "USDC"
                         "expiration":
                           "type": "string"
@@ -1094,11 +1317,9 @@
                           "properties":
                             "base":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "WETH"
                             "quote":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "USDC"
                             "expiration":
                               "type": "string"
@@ -1129,7 +1350,7 @@
                     "dataPath":
                       "type": "string"
                     "params":
-                      "type": "string"
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -1157,11 +1378,9 @@
               "properties":
                 "base":
                   "type": "string"
-                  "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                   "example": "WETH"
                 "quote":
                   "type": "string"
-                  "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                   "example": "USDC"
                 "expiration":
                   "type": "string"
@@ -1196,11 +1415,9 @@
                       "properties":
                         "base":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "WETH"
                         "quote":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "USDC"
                         "expiration":
                           "type": "string"
@@ -1225,11 +1442,9 @@
                           "properties":
                             "base":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "WETH"
                             "quote":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "USDC"
                             "expiration":
                               "type": "string"
@@ -1260,7 +1475,7 @@
                     "dataPath":
                       "type": "string"
                     "params":
-                      "type": "string"
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -1290,7 +1505,6 @@
                 "properties":
                   "token":
                     "type": "string"
-                    "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                     "example": "WETH"
                   "amt":
                     "oneOf":
@@ -1321,7 +1535,6 @@
                       "properties":
                         "token":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "WETH"
                         "amt":
                           "oneOf":
@@ -1341,7 +1554,6 @@
                           "properties":
                             "token":
                               "type": "string"
-                              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                               "example": "WETH"
                             "amt":
                               "oneOf":
@@ -1370,7 +1582,7 @@
                     "dataPath":
                       "type": "string"
                     "params":
-                      "type": "string"
+                      "type": "object"
                     "message":
                       "type": "string"
         "401":
@@ -1412,11 +1624,9 @@
                   "properties":
                     "base":
                       "type": "string"
-                      "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                       "example": "WETH"
                     "quote":
                       "type": "string"
-                      "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                       "example": "USDC"
                     "expiration":
                       "type": "string"
@@ -1492,7 +1702,6 @@
                           "example": 2.345
                         "symbol":
                           "type": "string"
-                          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
                           "example": "WETH"
                         "token_address":
                           "type": "string"
@@ -1503,8 +1712,9 @@
                     "items":
                       "type": "object"
                       "properties":
-                        "failedBalanceQuery":
+                        "token":
                           "type": "string"
+                          "example": "WETH"
                         "reason":
                           "type": "string"
         "401":
@@ -1569,6 +1779,11 @@
                         "token_address":
                           "type": "string"
                           "example": "0x...4cFF2"
+                        "exposure":
+                          "type": "string"
+                          "enum":
+                            - "SHORT"
+                            - "LONG"
                     "type": "array"
                   "open":
                     "items":
@@ -1583,6 +1798,11 @@
                         "token_address":
                           "type": "string"
                           "example": "0x...4cFF2"
+                        "exposure":
+                          "type": "string"
+                          "enum":
+                            - "SHORT"
+                            - "LONG"
                     "type": "array"
                 "type": "object"
         "401":
@@ -1606,11 +1826,9 @@
       "properties":
         "base":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "WETH"
         "quote":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "USDC"
         "expiration":
           "type": "string"
@@ -1625,6 +1843,35 @@
             - "P"
           "type": "string"
           "example": "P"
+    "PoolWithAddress":
+      "type": "object"
+      "allOf":
+        -
+          "type": "object"
+          "properties":
+            "base":
+              "type": "string"
+              "example": "WETH"
+            "quote":
+              "type": "string"
+              "example": "USDC"
+            "expiration":
+              "type": "string"
+              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+              "example": "03NOV23"
+            "strike":
+              "type": "number"
+              "example": 1700
+            "type":
+              "enum":
+                - "C"
+                - "P"
+              "type": "string"
+              "example": "P"
+      "properties":
+        "poolAddress":
+          "type": "string"
+          "example": "0x...4cFF2"
     "NFTBalance":
       "type": "object"
       "properties":
@@ -1637,6 +1884,11 @@
         "token_address":
           "type": "string"
           "example": "0x...4cFF2"
+        "exposure":
+          "type": "string"
+          "enum":
+            - "SHORT"
+            - "LONG"
     "OptionPositions":
       "properties":
         "expired":
@@ -1652,6 +1904,11 @@
               "token_address":
                 "type": "string"
                 "example": "0x...4cFF2"
+              "exposure":
+                "type": "string"
+                "enum":
+                  - "SHORT"
+                  - "LONG"
           "type": "array"
         "open":
           "items":
@@ -1666,6 +1923,11 @@
               "token_address":
                 "type": "string"
                 "example": "0x...4cFF2"
+              "exposure":
+                "type": "string"
+                "enum":
+                  - "SHORT"
+                  - "LONG"
           "type": "array"
       "type": "object"
     "TokenBalance":
@@ -1680,7 +1942,6 @@
           "example": 2.345
         "symbol":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "WETH"
         "token_address":
           "type": "string"
@@ -1691,7 +1952,6 @@
       "properties":
         "token":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "WETH"
         "amt":
           "oneOf":
@@ -1716,11 +1976,9 @@
       "properties":
         "base":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "WETH"
         "quote":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "USDC"
         "expiration":
           "type": "string"
@@ -1781,18 +2039,16 @@
           "pattern": "[a-fA-F0-9]{64}$"
           "example": "ba638...fb25e"
       "required":
-        - "size"
+        - "tradeSize"
         - "quoteId"
     "PositionsRequestParams":
       "type": "object"
       "properties":
         "base":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "WETH"
         "quote":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "USDC"
         "expiration":
           "type": "string"
@@ -1818,7 +2074,6 @@
         "properties":
           "token":
             "type": "string"
-            "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
             "example": "WETH"
           "amt":
             "oneOf":
@@ -1838,11 +2093,9 @@
       "properties":
         "base":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "WETH"
         "quote":
           "type": "string"
-          "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
           "example": "USDC"
         "expiration":
           "type": "string"
@@ -1890,11 +2143,9 @@
           "properties":
             "base":
               "type": "string"
-              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
               "example": "WETH"
             "quote":
               "type": "string"
-              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
               "example": "USDC"
             "expiration":
               "type": "string"
@@ -1919,7 +2170,6 @@
           "properties":
             "token":
               "type": "string"
-              "pattern": "^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
               "example": "WETH"
             "amt":
               "oneOf":
@@ -1934,7 +2184,6 @@
       "required":
         - "failedApproval"
         - "reason"
-    "AnyValue": {}
     "AuthError":
       "type": "object"
       "properties":
@@ -1951,7 +2200,7 @@
           "dataPath":
             "type": "string"
           "params":
-            "type": "string"
+            "type": "object"
           "message":
             "type": "string"
   "securitySchemes":
