@@ -10,12 +10,14 @@
 "paths":
   "/orderbook/quotes":
     "post":
-      "summary": "Publishes option quote(s) on-chain and into the orderbook. Please note there is no gas that is paid to publish quotes. Deadline is the number of seconds the order is valid for. Price is normalized.  For calls,  price is denominated in the base token (ie 0.13 WETH), and for puts price is in denominated in the  quote token but normalized using strike. For example, a put price of 0.13 => (234 USDC price / 1800 Strike )  is equivalent to 234 USDC if the strike is 1800."
+      "summary": "Publishes option quote(s) on-chain and into the orderbook (max quotes quantity is 200).  Please note there is no gas that is paid to publish quotes.  Deadline is the number of seconds the order is valid for. Price is normalized.   For calls, price is denominated in the base token (ie 0.13 WETH), and for puts price is in denominated in the  quote token but normalized using strike. For example, a put price of 0.13 => (234 USDC price / 1800 Strike )  is equivalent to 234 USDC if the strike is 1800."
       "requestBody":
         "content":
           "application/json":
             "schema":
               "type": "array"
+              "minItems": 1
+              "maxItems": 200
               "items":
                 "type": "object"
                 "properties":
@@ -429,12 +431,14 @@
           "api_key":
             - "api"
     "patch":
-      "summary": "Used to fill quote(s).  Only the size and quoteId for each quote are required. All quoteIds are  returned either as 'success' or 'failed'. Each limit order that is trying to be filled is an \"all or nothing\" attempt."
+      "summary": "Used to fill quote(s) (max quotes quantity is 25).   Only the size and quoteId for each quote are required. All quoteIds are returned either as 'success' or 'failed'. Each limit order that is trying to be filled is an \"all or nothing\" attempt."
       "requestBody":
         "content":
           "application/json":
             "schema":
               "type": "array"
+              "minItems": 1
+              "maxItems": 25
               "items":
                 "type": "object"
                 "properties":
@@ -504,12 +508,14 @@
           "api_key":
             - "api"
     "delete":
-      "summary": "Deletes the quote(s) from the orderbook that have not exceeded their deadline.  Please note that  orders that have surpassed their deadline do NOT need to be cancelled.  They are automatically removed from the orderbook and are unfillable on-chain. Cancelling orders does incur on-chain gas fees."
+      "summary": "Deletes the quote(s) from the orderbook that have not exceeded their deadline (max quotes quantity is 25). Please note that orders that have surpassed their deadline do NOT need to be cancelled.   They are automatically removed from the orderbook and are unfillable on-chain. Cancelling orders does incur on-chain gas fees."
       "requestBody":
         "content":
           "application/json":
             "schema":
               "type": "array"
+              "minItems": 1
+              "maxItems": 25
               "items":
                 "type": "object"
                 "properties":
