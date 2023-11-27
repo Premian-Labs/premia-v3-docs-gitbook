@@ -15,8 +15,8 @@ description: Rest API End Points
 
 To submit a quote to the orderbook, `POST` quotes can be used.  In the background, we will take this quote an submit an event on Arbitrum Nova on the users behalf.  One the quote event is generated on Arbitrum Nova, it will be added to the orderbook.
 
-{% swagger src="../../../.gitbook/assets/openapi (1) (1).yaml" path="/quotes" method="post" %}
-[openapi (1) (1).yaml](<../../../.gitbook/assets/openapi (1) (1).yaml>)
+{% swagger src="../../../.gitbook/assets/openapi3_0.yaml" path="/quotes" method="post" %}
+[openapi3_0.yaml](../../../.gitbook/assets/openapi3_0.yaml)
 {% endswagger %}
 
 {% tabs %}
@@ -89,8 +89,8 @@ When using `GET` quotes, orders are returned based on the params details provide
 
 Additionally, it is possible to receive RFQ quotes  along with public quotes by specifying a `taker` address.  The allows users to find the best possible public/private quote combination for a particular quote size.
 
-{% swagger src="../../../.gitbook/assets/openapi (5) (1).yaml" path="/quotes" method="get" %}
-[openapi (5) (1).yaml](<../../../.gitbook/assets/openapi (5) (1).yaml>)
+{% swagger src="../../../.gitbook/assets/openapi3_0.yaml" path="/quotes" method="get" %}
+[openapi3_0.yaml](../../../.gitbook/assets/openapi3_0.yaml)
 {% endswagger %}
 
 {% tabs %}
@@ -140,8 +140,8 @@ getQuotes(poolAddress, size, side, chainId)
 
 When publishing an RFQ, users can [listen](websocket.md#subscribe-to-quotes-orderbook-and-rfq) for quotes via WEBSOCKET or use the rfq\_quotes endpoint to retrieve only RFQ quotes via REST API.&#x20;
 
-{% swagger src="../../../.gitbook/assets/openapi (1) (1).yaml" path="/rfq_quotes" method="get" %}
-[openapi (1) (1).yaml](<../../../.gitbook/assets/openapi (1) (1).yaml>)
+{% swagger src="../../../.gitbook/assets/openapi3_0.yaml" path="/rfq_quotes" method="get" %}
+[openapi3_0.yaml](../../../.gitbook/assets/openapi3_0.yaml)
 {% endswagger %}
 
 {% tabs %}
@@ -188,19 +188,17 @@ getRfqQuotes(poolAddress, side, chainId, takerAddress)
 {% endtab %}
 {% endtabs %}
 
-
-
 ### <mark style="color:blue;">Get Orders</mark>
 
 `GET` orders is a _general purpose_ query of orders in the orderbook.  Many of the params are optional to suit the needs of the query.  Orders are returned in descending order based on the _timestamp_ in which they were created.
 
+{% swagger src="../../../.gitbook/assets/openapi3_0.yaml" path="/orders" method="get" %}
+[openapi3_0.yaml](../../../.gitbook/assets/openapi3_0.yaml)
+{% endswagger %}
+
 {% hint style="warning" %}
 Good To Know: `size` param in `GET` orders is not the same as `size` param in `GET` quotes. See param descriptions.
 {% endhint %}
-
-{% swagger src="../../../.gitbook/assets/openapi (3) (1).yaml" path="/orders" method="get" %}
-[openapi (3) (1).yaml](<../../../.gitbook/assets/openapi (3) (1).yaml>)
-{% endswagger %}
 
 {% tabs %}
 {% tab title="Get Orders Example" %}
