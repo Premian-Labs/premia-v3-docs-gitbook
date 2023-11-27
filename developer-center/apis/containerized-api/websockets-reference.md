@@ -241,7 +241,7 @@ const rfqRequest: RFQMessage = {
 }
 
 const wsCallback = (data: RawData) => {
-  const message: InfoMessage | ErrorMessage | RFQMessage = JSON.parse(data.toString())
+  const message: InfoMessage | ErrorMessage | RFQMessage | PostQuoteMessage | FillQuoteMessage | DeleteQuoteMessage = JSON.parse(data.toString())
     switch (message.type) {
       case 'RFQ': {
 	// receives rfq stream
@@ -256,7 +256,7 @@ const wsCallback = (data: RawData) => {
         break
       }
       default: {
-        throw `Wrong message type ${message.type}`
+        throw `Unexpected message type ${message.type}`
       }
 }
 
@@ -265,10 +265,48 @@ wsConnection.on('message', wsCallback)
 
 // send RFQMessage to start getting quotes stream
 wsConnection.send(JSON.stringify(rfqRequest))
+
+const webSocketFilter: FilterMessage = {
+  type: 'FILTER',
+  channel: 'RFQ',
+  body: {
+    chainId: '42161',
+    taker: '0x170f9e3eb81ed29491a2efdcfa2edd34fdd24a71' // fake address
+  }
+}
+
+// send FilterMessage to start listening to RFQ stream
+wsConnection.send(JSON.stringify(webSocketFilter))
 ```
 {% endtab %}
 {% endtabs %}
 
+{% hint style="warning" %}
+IMPORTANT:  WS API supports both `FilterMessage` channels `RFQ` and `QUOTES` running concurrently. However, only single filter can be applied  per channel type. This means if you're listening to both quotes and RFQ streams sending new message filter into`QUOTES`channel will override quotes streams filter, but RFQ will still run without changes, e.g. there's only one singleton filter state per channel.
+{% endhint %}
+
 ### <mark style="color:blue;">Unsubscribing from WS Streams</mark>
+
+User can stop listening to either `RFQ` or `QUOTES` streams channels or _both_ without closing WS session using UNSUBSCRIBE command as following:
+
+```typescript
+interface WSUnsubscribeMessage {
+    type: 'UNSUBSCRIBE'
+    channel: 'QUOTES' | 'RFQ'
+    body: null
+}
+
+const unsubscribeMsg: WSUnsubscribeMessage = {
+    type: 'UNSUBSCRIBE',
+    channel: channel,
+    body: null,
+}
+
+wsConnection.send(JSON.stringify(unsubscribeMsg))
+```
+
+
+
+
 
 <mark style="color:blue;">TODO</mark>
