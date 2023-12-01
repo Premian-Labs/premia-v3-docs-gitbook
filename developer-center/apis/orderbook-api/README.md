@@ -10,7 +10,7 @@ This API is primarily for the aggregation/display of decentralized orderbook dat
 
 ### <mark style="color:blue;">API KEY</mark>
 
-In order to use the API directly or through the SDK, an api key is required.  Currently, all api key requests must be made to <mark style="color:blue;">support@premia.finance</mark>.  Please use subject line: 'API KEY REQUEST' and an api key will be returned. &#x20;
+In order to use the API directly or through the SDK, an api key is required.  Currently, all api key requests must be made to <mark style="color:blue;">research@premia.finance</mark>.  Please use subject line: 'API KEY REQUEST' and an api key will be returned. &#x20;
 
 ### <mark style="color:blue;">Pool vs Orderbook</mark>
 
