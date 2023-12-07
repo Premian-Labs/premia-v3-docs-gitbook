@@ -100,6 +100,10 @@
 * [Subgraph](developer-center/subgraph.md)
 * [V3 Change log](developer-center/v3-change-log.md)
 
+## Bots
+
+* [Range Order Bot](bots/range-order-bot.md)
+
 ## Resources
 
 * [VIP & Institutional Services](resources/vip-and-institutional-services.md)
