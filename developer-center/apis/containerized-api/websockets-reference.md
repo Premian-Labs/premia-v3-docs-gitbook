@@ -216,27 +216,44 @@ interface ErrorMessage {
   message: string
 }
 
+// human-readable format
 interface RFQMessage {
   type: 'RFQ'
   body: {
-    poolAddress: string
+    base: string // base token name i.e. WETH
+    quote: string // base token name i.e. USDC
+    expiration: string // i.e. 23NOV2023
+    strike: number
+    type: 'C' | 'P'
     side: 'bid' | 'ask'
-    chainId: string
-    // bigInt string representation
-    size: string
+    size: number
     taker: string
   }
 }
 
-// subscribe to listen to quotes
-const rfqRequest: RFQMessage = {
+// IMPORTANT!!! outbound RFQ message is web3 format
+// We recommended replicate/copy createPoolKey function
+const rfqRequest = {
   type: 'RFQ',
   body: {
-    poolAddress: '0x770f9e3eb81ed29491a2efdcfa2edd34fdd24a72', // dummy address
+    poolKey: {
+      	base: '0x7F5bc2250ea57d8ca932898297b1FF9aE1a04999'
+	quote: '0x53421DB1f41368E028A4239954feB5033C7B3729'
+	oracleAdapter: string
+	// serialised bigint
+	strike: parseEther('1700').toString()
+	// make sure maturities either tomorrow, 
+	// the day after tomorrow, 
+	// each Friday of current month, 
+	// last Friday of each next month
+	// 8:00 AM UTC
+	maturity: 1702022400
+	isCallPool: boolean
+    },
     side: 'ask',
-    chainId: '42161',
-    size: '1000000000000000',
-    taker: '0x170f9e3eb81ed29491a2efdcfa2edd34fdd24a71'
+    chainId: '421613', // or '42161' for prod environment
+    size: parseEther('1').toString(),
+    taker: '0x3D1dcc44D65C08b39029cA8673D705D7e5c4cFF2'
   }
 }
 

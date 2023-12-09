@@ -138,6 +138,8 @@ const { WebSocket } = require('ws')
 const { parseEther } = require("ethers");
 
 const wsUrl = 'test.quotes.premia.finance'
+// or quotes.premia.finance for prod environment
+
 const MOCK_API_KEY = '3423ee2bfd89491f82b351404ea8c3b7'
 
 const authMessage = {
@@ -150,9 +152,22 @@ const authMessage = {
 const rfqPublishMessage = {
   type: 'RFQ',
   body: {
-    poolAddress: '0xeB785e131784ea28b6B64B605CF8aa83D69793b5',
+    poolKey: {
+      	base: '0x7F5bc2250ea57d8ca932898297b1FF9aE1a04999'
+	quote: '0x53421DB1f41368E028A4239954feB5033C7B3729'
+	oracleAdapter: string
+	// serialised bigint
+	strike: parseEther('1700').toString()
+	// make sure maturities either tomorrow, 
+	// the day after tomorrow, 
+	// each Friday of current month, 
+	// last Friday of each next month
+	// 8:00 AM UTC
+	maturity: 1702022400
+	isCallPool: boolean
+    },
     side: 'ask',
-    chainId: '421613',
+    chainId: '421613', // or '42161' for prod environment
     size: parseEther('1').toString(),
     taker: '0x3D1dcc44D65C08b39029cA8673D705D7e5c4cFF2'
   }
@@ -211,7 +226,7 @@ Optional params in body include:
 poolAddress -> specific option market
 side -> 'bid' or 'ask'
  */
-const rfqListenMessage= {
+const rfqListenMessage = {
   type: 'FILTER',
   channel: 'RFQ',
   body: {
