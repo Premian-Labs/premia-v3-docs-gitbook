@@ -34,7 +34,7 @@ Request-For-Quote is an additional feature available through the orderbook infra
 
 _What is an RFQ request look like? It is simply an object with the following details:_
 
-* <mark style="color:green;">PoolAddress</mark> -> the pool address (option market) the quote is for
+* <mark style="color:green;">PoolKey</mark> -> the pool identifier object (base token, quote token, oracle address, strike, maturity, call or put)
 * <mark style="color:green;">Side</mark> -> either a 'bid' or 'ask'
 * <mark style="color:green;">ChainId</mark> -> the chain id (Arbitrum One Mainnet or Goerli Arbitrum Testnet)
 * <mark style="color:green;">Size</mark> -> the quantity that is be requested
