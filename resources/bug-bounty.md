@@ -41,6 +41,7 @@ Known Areas where the concern is acknowledged; however, no action will be taken:
 
 * V2 Contracts utilize the ChainLink function: latestAnswer(), which is no longer the recommended (latestRoundData) method to retrieve Oracle price.
 * V2 Contracts do not utilize the ChainLink variable: latestTimestamp to validate that a stale price is not being utilized.
+* LayerZero vxPremia sendFrom reverts due to out of gas on cross-chain transfers, resulting in storedPayload blockage.
 
 ### Reporting a Vulnerability <a href="#reportingavulnerability" id="reportingavulnerability"></a>
 
