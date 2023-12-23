@@ -63,6 +63,10 @@ wsConnection.off('message', wsCallback)
 
 Subscribing to quotes allows a user to stream real time quotes that are published to the orderbook along with any private quotes that may also be available from an [RFQ request](websockets-reference.md#publish-rfq-request-s).  By default, ALL public quotes are subscribed to upon authorization of a websocket connection. `FILTER` message are required to start listening to orderbook _quotes events_: a quote published, filled or cancelled.
 
+{% hint style="info" %}
+Filtering by `provider` is _exclusive_: WS subscription will listen ONLY to the quotes where `quote.provider == provider`. In contrast, `taker` filter is _additive:_ WS subscription will receive all public quotes (`quote.taker == ZeroAddress`) _and_ private quotes (`quote.taker` is valid wallet address, e.g. not `ZeroAddress`).
+{% endhint %}
+
 {% tabs %}
 {% tab title="Subscribe to Quotes Stream Exmaple" %}
 <pre class="language-typescript"><code class="lang-typescript">// TypeScript Sample Code 
