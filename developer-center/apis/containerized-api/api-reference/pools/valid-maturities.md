@@ -1,5 +1,5 @@
 # Valid Maturities
 
-{% swagger src="broken-reference" path="/pools/maturities" method="get" %}
-[Broken file](broken-reference)
+{% swagger src="../../../../../.gitbook/assets/openapi (1).yaml" path="/pools/maturities" method="get" %}
+[openapi (1).yaml](<../../../../../.gitbook/assets/openapi (1).yaml>)
 {% endswagger %}

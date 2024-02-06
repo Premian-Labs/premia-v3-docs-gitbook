@@ -1,5 +1,5 @@
 # Find Pools
 
-{% swagger src="../../../../../.gitbook/assets/openapi.yaml" path="/pools" method="get" %}
-[openapi.yaml](../../../../../.gitbook/assets/openapi.yaml)
+{% swagger src="../../../../../.gitbook/assets/openapi (2).yaml" path="/pools" method="get" %}
+[openapi (2).yaml](<../../../../../.gitbook/assets/openapi (2).yaml>)
 {% endswagger %}

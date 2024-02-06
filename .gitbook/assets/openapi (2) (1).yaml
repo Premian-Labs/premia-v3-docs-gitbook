@@ -415,6 +415,70 @@ paths:
       security:
         - api_key:
             - api
+  /pools/strikes:
+    get:
+      summary: Returns all valid strike for a given market.
+      parameters:
+        - name: spotPrice
+          in: query
+          description: unique address of the pool
+          required: false
+          schema:
+            type: number
+            example: 10000
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                example: [5000, 5500, 6000, ..., 9500, 10000, 11000, 12000, ..., 20000]
+                type: array
+                items:
+                  type: number
+        '400':
+          description: Invalid parameters supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
+  /pools/maturities:
+    get:
+      summary: Returns all valid maturities - tomorrow, the day after tomorrow, each Friday of current month, last Friday of each next month.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                example: ['02DEC23', '03DEC23', '08DEC23', '15DEC23', '22DEC23', '26JAN24', '23FEB24', ..., '27DEC24']
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Invalid parameters supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+      security:
+        - api_key:
+            - api
   /orderbook/orders:
     get:
       summary: Gets all valid quote(s) on the orderbook by using broad query params. If no parameters are supplied 
