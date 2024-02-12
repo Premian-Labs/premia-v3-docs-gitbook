@@ -81,6 +81,7 @@
         * [Valid Strikes](developer-center/apis/containerized-api/api-reference/pools/valid-strikes.md)
       * [Oracles](developer-center/apis/containerized-api/api-reference/oracles/README.md)
         * [IV](developer-center/apis/containerized-api/api-reference/oracles/iv.md)
+        * [Spot](developer-center/apis/containerized-api/api-reference/oracles/spot.md)
     * [WebSockets Reference](developer-center/apis/containerized-api/websockets-reference.md)
 * [SDK](developer-center/sdk/README.md)
   * [Guides](developer-center/sdk/guides.md)
