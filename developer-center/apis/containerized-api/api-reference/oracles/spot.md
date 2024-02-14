@@ -7,6 +7,6 @@ description: >-
 
 # Spot
 
-{% swagger src="../../../../../.gitbook/assets/openapi (3).yaml" path="/oracles/spot" method="get" %}
-[openapi (3).yaml](<../../../../../.gitbook/assets/openapi (3).yaml>)
+{% swagger src="../../../../../.gitbook/assets/openapi3_1 (1) (1).yaml" path="/oracles/spot" method="get" %}
+[openapi3_1 (1) (1).yaml](<../../../../../.gitbook/assets/openapi3_1 (1) (1).yaml>)
 {% endswagger %}
