@@ -1,0 +1,2836 @@
+
+"openapi": "3.1.0"
+"info":
+  "title": "Premia Orderbook Open API (OpenAPI 3.0)"
+  "description": "Premia containerised API for decentralised orderbook trading, position, and account management."
+  "license":
+    "name": "Attribution-NonCommercial 3.0"
+    "url": "https://creativecommons.org/licenses/by-nc/3.0"
+  "version": "1.0.0"
+"paths":
+  "/orderbook/quotes":
+    "post":
+      "summary": "Publishes option quote(s) on-chain and into the orderbook (max quotes quantity is 200).  Please note there is no gas that is paid to publish quotes.  Deadline is the number of seconds the order is valid for. Price is normalized.   For calls, price is denominated in the base token (ie 0.13 WETH), and for puts price is in denominated in the  quote token but normalized using strike. For example, a put price of 0.13 => (234 USDC price / 1800 Strike )  is equivalent to 234 USDC if the strike is 1800."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "array"
+              "minItems": 1
+              "maxItems": 200
+              "items":
+                "type": "object"
+                "properties":
+                  "base":
+                    "type": "string"
+                    "example": "WETH"
+                  "quote":
+                    "type": "string"
+                    "example": "USDC"
+                  "expiration":
+                    "type": "string"
+                    "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                    "example": "03NOV23"
+                  "strike":
+                    "type": "number"
+                    "example": 1800
+                  "type":
+                    "type": "string"
+                    "pattern": "^C$|^P$"
+                    "example": "P"
+                  "side":
+                    "type": "string"
+                    "pattern": "^bid$|^ask$"
+                    "example": "bid"
+                  "size":
+                    "type": "number"
+                    "example": 4
+                  "price":
+                    "type": "number"
+                    "example": ".13"
+                  "deadline":
+                    "type": "integer"
+                    "example": 120
+                  "taker":
+                    "type": "string"
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                    "example": "0x...4cFF2"
+                "required":
+                  - "base"
+                  - "quote"
+                  - "expiration"
+                  - "strike"
+                  - "type"
+                  - "side"
+                  - "size"
+                  - "price"
+                  - "deadline"
+        "required": true
+      "responses":
+        "200":
+          "description": "Quote exists"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "reason":
+                          "type": "string"
+                          "enum":
+                            - "Quote deadline is invalid (cannot be less than 60 sec)"
+                            - "Failed to fetch pool address"
+                            - "QuoteOBExpired"
+                            - "QuoteOBCancelled"
+                            - "QuoteOBOverfilled"
+                            - "OutOfBoundsPrice"
+                            - "InvalidQuoteOBTaker"
+                            - "InvalidQuoteOBSignature"
+                            - "InvalidAssetUpdate"
+                            - "InsufficientCollateralAllowance"
+                            - "InsufficientCollateralBalance"
+                            - "InsufficientLongBalance"
+                            - "InsufficientShortBalance"
+                        "quote":
+                          "required":
+                            - "base"
+                            - "quote"
+                            - "expiration"
+                            - "strike"
+                            - "type"
+                            - "side"
+                            - "remainingSize"
+                            - "price"
+                            - "provider"
+                            - "taker"
+                            - "deadline"
+                            - "ts"
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                            "side":
+                              "enum":
+                                - "ask"
+                                - "bid"
+                              "type": "string"
+                              "example": "bid"
+                            "remainingSize":
+                              "type": "number"
+                              "example": 3
+                            "provider":
+                              "type": "string"
+                              "pattern": "^0x[a-fA-F0-9]{40}$"
+                              "example": "ba638...fb25e"
+                            "taker":
+                              "type": "string"
+                              "pattern": "^0x[a-fA-F0-9]{40}$"
+                              "example": "0x0000000000000000000000000000000000000000"
+                            "price":
+                              "type": "number"
+                              "example": ".15"
+                            "deadline":
+                              "type": "number"
+                              "example": 184
+                            "quoteId":
+                              "type": "string"
+                              "pattern": "[a-fA-F0-9]{64}$"
+                              "example": "ba638...fb25e"
+                            "ts":
+                              "type": "number"
+                              "example": 1698952534
+                  "exists":
+                    "type": "array"
+                    "items":
+                      "required":
+                        - "base"
+                        - "quote"
+                        - "expiration"
+                        - "strike"
+                        - "type"
+                        - "side"
+                        - "remainingSize"
+                        - "price"
+                        - "provider"
+                        - "taker"
+                        - "deadline"
+                        - "ts"
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+                        "side":
+                          "enum":
+                            - "ask"
+                            - "bid"
+                          "type": "string"
+                          "example": "bid"
+                        "remainingSize":
+                          "type": "number"
+                          "example": 3
+                        "provider":
+                          "type": "string"
+                          "pattern": "^0x[a-fA-F0-9]{40}$"
+                          "example": "ba638...fb25e"
+                        "taker":
+                          "type": "string"
+                          "pattern": "^0x[a-fA-F0-9]{40}$"
+                          "example": "0x0000000000000000000000000000000000000000"
+                        "price":
+                          "type": "number"
+                          "example": ".15"
+                        "deadline":
+                          "type": "number"
+                          "example": 184
+                        "quoteId":
+                          "type": "string"
+                          "pattern": "[a-fA-F0-9]{64}$"
+                          "example": "ba638...fb25e"
+                        "ts":
+                          "type": "number"
+                          "example": 1698952534
+        "201":
+          "description": "Quote created"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "created":
+                    "type": "array"
+                    "items":
+                      "required":
+                        - "base"
+                        - "quote"
+                        - "expiration"
+                        - "strike"
+                        - "type"
+                        - "side"
+                        - "remainingSize"
+                        - "price"
+                        - "provider"
+                        - "taker"
+                        - "deadline"
+                        - "ts"
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+                        "side":
+                          "enum":
+                            - "ask"
+                            - "bid"
+                          "type": "string"
+                          "example": "bid"
+                        "remainingSize":
+                          "type": "number"
+                          "example": 3
+                        "provider":
+                          "type": "string"
+                          "pattern": "^0x[a-fA-F0-9]{40}$"
+                          "example": "ba638...fb25e"
+                        "taker":
+                          "type": "string"
+                          "pattern": "^0x[a-fA-F0-9]{40}$"
+                          "example": "0x0000000000000000000000000000000000000000"
+                        "price":
+                          "type": "number"
+                          "example": ".15"
+                        "deadline":
+                          "type": "number"
+                          "example": 184
+                        "quoteId":
+                          "type": "string"
+                          "pattern": "[a-fA-F0-9]{64}$"
+                          "example": "ba638...fb25e"
+                        "ts":
+                          "type": "number"
+                          "example": 1698952534
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "reason":
+                          "type": "string"
+                          "enum":
+                            - "Quote deadline is invalid (cannot be less than 60 sec)"
+                            - "Failed to fetch pool address"
+                            - "QuoteOBExpired"
+                            - "QuoteOBCancelled"
+                            - "QuoteOBOverfilled"
+                            - "OutOfBoundsPrice"
+                            - "InvalidQuoteOBTaker"
+                            - "InvalidQuoteOBSignature"
+                            - "InvalidAssetUpdate"
+                            - "InsufficientCollateralAllowance"
+                            - "InsufficientCollateralBalance"
+                            - "InsufficientLongBalance"
+                            - "InsufficientShortBalance"
+                        "quote":
+                          "required":
+                            - "base"
+                            - "quote"
+                            - "expiration"
+                            - "strike"
+                            - "type"
+                            - "side"
+                            - "remainingSize"
+                            - "price"
+                            - "provider"
+                            - "taker"
+                            - "deadline"
+                            - "ts"
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                            "side":
+                              "enum":
+                                - "ask"
+                                - "bid"
+                              "type": "string"
+                              "example": "bid"
+                            "remainingSize":
+                              "type": "number"
+                              "example": 3
+                            "provider":
+                              "type": "string"
+                              "pattern": "^0x[a-fA-F0-9]{40}$"
+                              "example": "ba638...fb25e"
+                            "taker":
+                              "type": "string"
+                              "pattern": "^0x[a-fA-F0-9]{40}$"
+                              "example": "0x0000000000000000000000000000000000000000"
+                            "price":
+                              "type": "number"
+                              "example": ".15"
+                            "deadline":
+                              "type": "number"
+                              "example": 184
+                            "quoteId":
+                              "type": "string"
+                              "pattern": "[a-fA-F0-9]{64}$"
+                              "example": "ba638...fb25e"
+                            "ts":
+                              "type": "number"
+                              "example": 1698952534
+                  "exists":
+                    "type": "array"
+                    "items":
+                      "required":
+                        - "base"
+                        - "quote"
+                        - "expiration"
+                        - "strike"
+                        - "type"
+                        - "side"
+                        - "remainingSize"
+                        - "price"
+                        - "provider"
+                        - "taker"
+                        - "deadline"
+                        - "ts"
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+                        "side":
+                          "enum":
+                            - "ask"
+                            - "bid"
+                          "type": "string"
+                          "example": "bid"
+                        "remainingSize":
+                          "type": "number"
+                          "example": 3
+                        "provider":
+                          "type": "string"
+                          "pattern": "^0x[a-fA-F0-9]{40}$"
+                          "example": "ba638...fb25e"
+                        "taker":
+                          "type": "string"
+                          "pattern": "^0x[a-fA-F0-9]{40}$"
+                          "example": "0x0000000000000000000000000000000000000000"
+                        "price":
+                          "type": "number"
+                          "example": ".15"
+                        "deadline":
+                          "type": "number"
+                          "example": 184
+                        "quoteId":
+                          "type": "string"
+                          "pattern": "[a-fA-F0-9]{64}$"
+                          "example": "ba638...fb25e"
+                        "ts":
+                          "type": "number"
+                          "example": 1698952534
+        "400":
+          "description": "Bad request"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+    "patch":
+      "summary": "Used to fill quote(s) (max quotes quantity is 25).   Only the size and quoteId for each quote are required. All quoteIds are returned either as 'success' or 'failed'. Each limit order that is trying to be filled is an \"all or nothing\" attempt."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "array"
+              "minItems": 1
+              "maxItems": 25
+              "items":
+                "type": "object"
+                "properties":
+                  "tradeSize":
+                    "type": "number"
+                    "minimum": 0
+                    "example": 4
+                  "quoteId":
+                    "type": "string"
+                    "pattern": "[a-fA-F0-9]{64}$"
+                    "example": "ba638...fb25e"
+                "required":
+                  - "tradeSize"
+                  - "quoteId"
+        "required": true
+      "responses":
+        "200":
+          "description": "Quotes filled"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "string"
+                      "description": "filled quote ids"
+                      "pattern": "[a-fA-F0-9]{64}"
+                      "example": "ba638...fb25e"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "string"
+                      "description": "failed to fill quote ids"
+                      "pattern": "[a-fA-F0-9]{64}"
+                      "example": "ba638...fb25e"
+        "400":
+          "description": "Bad request"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+    "delete":
+      "summary": "Deletes the quote(s) from the orderbook that have not exceeded their deadline (max quotes quantity is 25). Please note that orders that have surpassed their deadline do NOT need to be cancelled.   They are automatically removed from the orderbook and are unfillable on-chain. Cancelling orders does incur on-chain gas fees."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "array"
+              "minItems": 1
+              "maxItems": 25
+              "items":
+                "type": "object"
+                "properties":
+                  "quoteIds":
+                    "type": "array"
+                    "items":
+                      "type": "string"
+                      "pattern": "[a-fA-F0-9]{64}$"
+                      "example": "ba638...fb25e"
+                    "minItems": 1
+                "required":
+                  - "quoteIds"
+        "required": true
+      "responses":
+        "200":
+          "description": "Quote cancelled"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "string"
+                      "pattern": "[a-fA-F0-9]{64}$"
+                      "example": "ba638...fb25e"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "string"
+                      "pattern": "[a-fA-F0-9]{64}$"
+                      "example": "ba638...fb25e"
+                  "omitted":
+                    "type": "array"
+                    "items":
+                      "type": "string"
+                      "pattern": "[a-fA-F0-9]{64}$"
+                      "example": "ba638...fb25e"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+    "get":
+      "summary": "Get all quotes for a specific option up to a specified size/qty. All orders will be ranked from best to worst according to price. Please note that this will not show the full state of the orderbook if the total market liquidity is greater than the size specified."
+      "parameters":
+        -
+          "name": "base"
+          "in": "query"
+          "required": true
+          "description": "base token symbol (ie WETH)"
+          "schema":
+            "type": "string"
+            "example": "WETH"
+        -
+          "name": "quote"
+          "in": "query"
+          "required": true
+          "description": "quote token symbol (ie USDC)"
+          "schema":
+            "type": "string"
+            "example": "USDC"
+        -
+          "name": "expiration"
+          "in": "query"
+          "required": true
+          "description": "option expiration (ie 03NOV23)"
+          "schema":
+            "type": "string"
+            "example": "03NOV23"
+        -
+          "name": "strike"
+          "in": "query"
+          "required": true
+          "description": "option strike (ie 1800)"
+          "schema":
+            "type": "number"
+            "minimum": 0
+            "example": 1800
+        -
+          "name": "type"
+          "in": "query"
+          "description": "C or P"
+          "required": true
+          "schema":
+            "type": "string"
+            "pattern": "^C$|^P$"
+            "example": "P"
+        -
+          "name": "size"
+          "in": "query"
+          "description": "number of contracts (ie 4)"
+          "required": true
+          "schema":
+            "type": "number"
+            "minimum": 0
+            "example": 4
+        -
+          "name": "side"
+          "in": "query"
+          "description": "orderbook side (ie bid)"
+          "required": true
+          "schema":
+            "type": "string"
+            "pattern": "^bid$|^ask$"
+            "example": "bid"
+        -
+          "name": "provider"
+          "in": "query"
+          "description": "unique address of the provider (maker)"
+          "required": false
+          "schema":
+            "type": "string"
+            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "example": "ba638...fb25e"
+        -
+          "name": "taker"
+          "in": "query"
+          "description": "unique address of the taker (only for rfq quotes)"
+          "required": false
+          "schema":
+            "type": "string"
+            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "example": "ba638...fb25e"
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "required":
+                    - "base"
+                    - "quote"
+                    - "expiration"
+                    - "strike"
+                    - "type"
+                    - "side"
+                    - "remainingSize"
+                    - "price"
+                    - "provider"
+                    - "taker"
+                    - "deadline"
+                    - "ts"
+                  "type": "object"
+                  "properties":
+                    "base":
+                      "type": "string"
+                      "example": "WETH"
+                    "quote":
+                      "type": "string"
+                      "example": "USDC"
+                    "expiration":
+                      "type": "string"
+                      "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                      "example": "03NOV23"
+                    "strike":
+                      "type": "number"
+                      "example": 1700
+                    "type":
+                      "enum":
+                        - "C"
+                        - "P"
+                      "type": "string"
+                      "example": "P"
+                    "side":
+                      "enum":
+                        - "ask"
+                        - "bid"
+                      "type": "string"
+                      "example": "bid"
+                    "remainingSize":
+                      "type": "number"
+                      "example": 3
+                    "provider":
+                      "type": "string"
+                      "pattern": "^0x[a-fA-F0-9]{40}$"
+                      "example": "ba638...fb25e"
+                    "taker":
+                      "type": "string"
+                      "pattern": "^0x[a-fA-F0-9]{40}$"
+                      "example": "0x0000000000000000000000000000000000000000"
+                    "price":
+                      "type": "number"
+                      "example": ".15"
+                    "deadline":
+                      "type": "number"
+                      "example": 184
+                    "quoteId":
+                      "type": "string"
+                      "pattern": "[a-fA-F0-9]{64}$"
+                      "example": "ba638...fb25e"
+                    "ts":
+                      "type": "number"
+                      "example": 1698952534
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/pools":
+    "post":
+      "summary": "Creates new option pools."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "array"
+              "items":
+                "type": "object"
+                "properties":
+                  "base":
+                    "type": "string"
+                    "example": "WETH"
+                  "quote":
+                    "type": "string"
+                    "example": "USDC"
+                  "expiration":
+                    "type": "string"
+                    "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                    "example": "03NOV23"
+                  "strike":
+                    "type": "number"
+                    "example": 1700
+                  "type":
+                    "enum":
+                      - "C"
+                      - "P"
+                    "type": "string"
+                    "example": "P"
+        "required": true
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "allOf":
+                        -
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                      "properties":
+                        "poolAddress":
+                          "type": "string"
+                          "example": "0x...4cFF2"
+                  "existed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "allOf":
+                        -
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                      "properties":
+                        "poolAddress":
+                          "type": "string"
+                          "example": "0x...4cFF2"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+    "get":
+      "summary": "Returns all active pool up to 90 days old."
+      "parameters":
+        -
+          "name": "base"
+          "in": "query"
+          "required": false
+          "description": "base token symbol (ie WETH)"
+          "schema":
+            "type": "string"
+            "pattern": "^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
+            "example": "WETH"
+        -
+          "name": "quote"
+          "in": "query"
+          "required": false
+          "description": "quote token symbol (ie USDC)"
+          "schema":
+            "type": "string"
+            "pattern": "^testWETH$|^WETH$|^WBTC$|^PREMIA$|^LINK$|^USDC$|^DAI$|^ARB$"
+            "example": "USDC"
+        -
+          "name": "expiration"
+          "in": "query"
+          "required": false
+          "description": "option expiration (ie 03NOV23)"
+          "schema":
+            "type": "string"
+            "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+            "example": "03NOV23"
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "allOf":
+                    -
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+                  "properties":
+                    "poolAddress":
+                      "type": "string"
+                      "example": "0x...4cFF2"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/pools/strikes":
+    "get":
+      "summary": "Returns all valid strikes for a given market."
+      "parameters":
+        -
+          "name": "spotPrice"
+          "in": "query"
+          "description": "spot price to use as reference for valid strikes"
+          "required": false
+          "schema":
+            "type": "number"
+            "example": 9846
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "example":
+                  - 5000
+                  - 5500
+                  - 6000
+                  - "..."
+                  - 9500
+                  - 10000
+                  - 11000
+                  - 12000
+                  - "..."
+                  - 20000
+                "type": "array"
+                "items":
+                  "type": "number"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/pools/maturities":
+    "get":
+      "summary": "Returns all valid maturities - tomorrow, the day after tomorrow, each Friday of current month, last Friday of each next month."
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "example":
+                  - "02DEC23"
+                  - "03DEC23"
+                  - "08DEC23"
+                  - "15DEC23"
+                  - "22DEC23"
+                  - "26JAN24"
+                  - "23FEB24"
+                  - "..."
+                  - "27DEC24"
+                "type": "array"
+                "items":
+                  "type": "string"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/orderbook/orders":
+    "get":
+      "summary": "Gets all valid quote(s) on the orderbook by using broad query params. If no parameters are supplied  the entire orderbook is returned."
+      "parameters":
+        -
+          "name": "poolAddress"
+          "in": "query"
+          "description": "unique address of the pool"
+          "required": false
+          "schema":
+            "type": "string"
+            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "example": "ba638...fb25e"
+        -
+          "name": "size"
+          "in": "query"
+          "description": "number of contracts (ie 4)"
+          "required": false
+          "schema":
+            "type": "number"
+            "minimum": 0
+            "example": 4
+        -
+          "name": "side"
+          "in": "query"
+          "description": "orderbook side (\"ask\" or \"bid\")"
+          "required": false
+          "schema":
+            "type": "string"
+            "pattern": "^bid$|^ask$"
+            "example": "bid"
+        -
+          "name": "provider"
+          "in": "query"
+          "description": "unique address of the provider"
+          "required": false
+          "schema":
+            "type": "string"
+            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "example": "ba638...fb25e"
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "required":
+                    - "base"
+                    - "quote"
+                    - "expiration"
+                    - "strike"
+                    - "type"
+                    - "side"
+                    - "remainingSize"
+                    - "price"
+                    - "provider"
+                    - "taker"
+                    - "deadline"
+                    - "ts"
+                  "type": "object"
+                  "properties":
+                    "base":
+                      "type": "string"
+                      "example": "WETH"
+                    "quote":
+                      "type": "string"
+                      "example": "USDC"
+                    "expiration":
+                      "type": "string"
+                      "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                      "example": "03NOV23"
+                    "strike":
+                      "type": "number"
+                      "example": 1700
+                    "type":
+                      "enum":
+                        - "C"
+                        - "P"
+                      "type": "string"
+                      "example": "P"
+                    "side":
+                      "enum":
+                        - "ask"
+                        - "bid"
+                      "type": "string"
+                      "example": "bid"
+                    "remainingSize":
+                      "type": "number"
+                      "example": 3
+                    "provider":
+                      "type": "string"
+                      "pattern": "^0x[a-fA-F0-9]{40}$"
+                      "example": "ba638...fb25e"
+                    "taker":
+                      "type": "string"
+                      "pattern": "^0x[a-fA-F0-9]{40}$"
+                      "example": "0x0000000000000000000000000000000000000000"
+                    "price":
+                      "type": "number"
+                      "example": ".15"
+                    "deadline":
+                      "type": "number"
+                      "example": 184
+                    "quoteId":
+                      "type": "string"
+                      "pattern": "[a-fA-F0-9]{64}$"
+                      "example": "ba638...fb25e"
+                    "ts":
+                      "type": "number"
+                      "example": 1698952534
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/pool/settle":
+    "post":
+      "summary": "Settles all short positions in each specified option in the request."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "array"
+              "items":
+                "type": "object"
+                "properties":
+                  "base":
+                    "type": "string"
+                    "example": "WETH"
+                  "quote":
+                    "type": "string"
+                    "example": "USDC"
+                  "expiration":
+                    "type": "string"
+                    "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                    "example": "03NOV23"
+                  "strike":
+                    "type": "number"
+                    "example": 1700
+                  "type":
+                    "type": "string"
+                    "pattern": "^C$|^P$"
+                    "example": "C"
+                "required":
+                  - "base"
+                  - "quote"
+                  - "expiration"
+                  - "strike"
+                  - "type"
+        "required": true
+      "responses":
+        "200":
+          "description": "Positions settled"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "failedOption":
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                        "reason":
+                          "type": "string"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/pool/exercise":
+    "post":
+      "summary": "Exercises all long positions in each specified option in the request. Please note that there is a fee  to exercise options."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "object"
+              "properties":
+                "base":
+                  "type": "string"
+                  "example": "WETH"
+                "quote":
+                  "type": "string"
+                  "example": "USDC"
+                "expiration":
+                  "type": "string"
+                  "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                  "example": "03NOV23"
+                "strike":
+                  "type": "number"
+                  "example": 1700
+                "type":
+                  "type": "string"
+                  "pattern": "^C$|^P$"
+                  "example": "C"
+              "required":
+                - "base"
+                - "quote"
+                - "expiration"
+                - "strike"
+                - "type"
+        "required": true
+      "responses":
+        "200":
+          "description": "Positions exercised"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "failedOption":
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                        "reason":
+                          "type": "string"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/pool/annihilate":
+    "post":
+      "summary": "Annihilates all long/short positions that offset in each specified option in the request. Please note  that it should be rare to need this endpoint when using only the orderbook. This is more applicable when  there is peer to peer transfers or account consolidations (transactions that do not go through the orderbook)."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "object"
+              "properties":
+                "base":
+                  "type": "string"
+                  "example": "WETH"
+                "quote":
+                  "type": "string"
+                  "example": "USDC"
+                "expiration":
+                  "type": "string"
+                  "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                  "example": "03NOV23"
+                "strike":
+                  "type": "number"
+                  "example": 1700
+                "type":
+                  "type": "string"
+                  "pattern": "^C$|^P$"
+                  "example": "C"
+              "required":
+                - "base"
+                - "quote"
+                - "expiration"
+                - "strike"
+                - "type"
+        "required": true
+      "responses":
+        "200":
+          "description": "Positions annihilated"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "base":
+                          "type": "string"
+                          "example": "WETH"
+                        "quote":
+                          "type": "string"
+                          "example": "USDC"
+                        "expiration":
+                          "type": "string"
+                          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                          "example": "03NOV23"
+                        "strike":
+                          "type": "number"
+                          "example": 1700
+                        "type":
+                          "enum":
+                            - "C"
+                            - "P"
+                          "type": "string"
+                          "example": "P"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "failedOption":
+                          "type": "object"
+                          "properties":
+                            "base":
+                              "type": "string"
+                              "example": "WETH"
+                            "quote":
+                              "type": "string"
+                              "example": "USDC"
+                            "expiration":
+                              "type": "string"
+                              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                              "example": "03NOV23"
+                            "strike":
+                              "type": "number"
+                              "example": 1700
+                            "type":
+                              "enum":
+                                - "C"
+                                - "P"
+                              "type": "string"
+                              "example": "P"
+                        "reason":
+                          "type": "string"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/account/collateral_approval":
+    "post":
+      "summary": "Approve collateral for trading.  The `amt` field can be either a number or a string `max`.  Setting  the approval to max will ensure no approvals are needed prior to a trade. This may also save gas costs and  reduce code complexity.  Alternatively, it is possible to approve only the amount intended to be traded (plus trading fees if applicable) for each order quoted or filled."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "array"
+              "items":
+                "type": "object"
+                "properties":
+                  "token":
+                    "type": "string"
+                    "example": "WETH"
+                  "amt":
+                    "oneOf":
+                      -
+                        "type": "number"
+                      -
+                        "type": "string"
+                        "pattern": "^max$"
+                    "example": "max"
+                "required":
+                  - "token"
+                  - "amt"
+              "minItems": 1
+              "maxItems": 8
+        "required": true
+      "responses":
+        "200":
+          "description": "Approved"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "token":
+                          "type": "string"
+                          "example": "WETH"
+                        "amt":
+                          "oneOf":
+                            -
+                              "type": "number"
+                            -
+                              "type": "string"
+                              "pattern": "^max$"
+                          "example": "max"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "failedApproval":
+                          "type": "object"
+                          "properties":
+                            "token":
+                              "type": "string"
+                              "example": "WETH"
+                            "amt":
+                              "oneOf":
+                                -
+                                  "type": "number"
+                                -
+                                  "type": "string"
+                                  "pattern": "^max$"
+                              "example": "max"
+                        "reason":
+                          "type": "string"
+                      "required":
+                        - "failedApproval"
+                        - "reason"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/account/orders":
+    "get":
+      "summary": "Gets all open quotes.  Any valid orders that are fillable and present in the orderbook for the address used for the containerized API will be returned. The address used is the one specified in the .env file."
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "required":
+                    - "base"
+                    - "quote"
+                    - "expiration"
+                    - "strike"
+                    - "type"
+                    - "side"
+                    - "remainingSize"
+                    - "price"
+                    - "provider"
+                    - "taker"
+                    - "deadline"
+                    - "ts"
+                  "type": "object"
+                  "properties":
+                    "base":
+                      "type": "string"
+                      "example": "WETH"
+                    "quote":
+                      "type": "string"
+                      "example": "USDC"
+                    "expiration":
+                      "type": "string"
+                      "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                      "example": "03NOV23"
+                    "strike":
+                      "type": "number"
+                      "example": 1700
+                    "type":
+                      "enum":
+                        - "C"
+                        - "P"
+                      "type": "string"
+                      "example": "P"
+                    "side":
+                      "enum":
+                        - "ask"
+                        - "bid"
+                      "type": "string"
+                      "example": "bid"
+                    "remainingSize":
+                      "type": "number"
+                      "example": 3
+                    "provider":
+                      "type": "string"
+                      "pattern": "^0x[a-fA-F0-9]{40}$"
+                      "example": "ba638...fb25e"
+                    "taker":
+                      "type": "string"
+                      "pattern": "^0x[a-fA-F0-9]{40}$"
+                      "example": "0x0000000000000000000000000000000000000000"
+                    "price":
+                      "type": "number"
+                      "example": ".15"
+                    "deadline":
+                      "type": "number"
+                      "example": 184
+                    "quoteId":
+                      "type": "string"
+                      "pattern": "[a-fA-F0-9]{64}$"
+                      "example": "ba638...fb25e"
+                    "ts":
+                      "type": "number"
+                      "example": 1698952534
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/account/collateral_balances":
+    "get":
+      "summary": "Checks collateral balance for all tokens that have tradeable option markets."
+      "responses":
+        "200":
+          "description": "Approved"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "success":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "balance":
+                          "oneOf":
+                            -
+                              "type": "string"
+                            -
+                              "type": "number"
+                          "example": 2.345
+                        "symbol":
+                          "type": "string"
+                          "example": "WETH"
+                        "token_address":
+                          "type": "string"
+                          "pattern": "^0x[a-fA-F0-9]{40}$"
+                          "example": "0x...4cFF2"
+                  "failed":
+                    "type": "array"
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "token":
+                          "type": "string"
+                          "example": "WETH"
+                        "reason":
+                          "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/account/native_balance":
+    "get":
+      "summary": "Checks the balance of ETH for the given account specified in the .env file."
+      "responses":
+        "200":
+          "description": "Success"
+          "content":
+            "application/json":
+              "schema":
+                "type": "number"
+                "example": 13.4556
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/account/option_balances":
+    "get":
+      "summary": "Checks the balance of all option positions for the given account specified in the .env file."
+      "responses":
+        "200":
+          "description": "Success"
+          "content":
+            "application/json":
+              "schema":
+                "properties":
+                  "expired":
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "amount":
+                          "type": "number"
+                          "example": 2.46
+                        "name":
+                          "type": "string"
+                          "example": "WETH-USDC-03NOV2023-1800-P"
+                        "token_address":
+                          "type": "string"
+                          "example": "0x...4cFF2"
+                        "exposure":
+                          "type": "string"
+                          "enum":
+                            - "SHORT"
+                            - "LONG"
+                    "type": "array"
+                  "open":
+                    "items":
+                      "type": "object"
+                      "properties":
+                        "amount":
+                          "type": "number"
+                          "example": 2.46
+                        "name":
+                          "type": "string"
+                          "example": "WETH-USDC-03NOV2023-1800-P"
+                        "token_address":
+                          "type": "string"
+                          "example": "0x...4cFF2"
+                        "exposure":
+                          "type": "string"
+                          "enum":
+                            - "SHORT"
+                            - "LONG"
+                    "type": "array"
+                "type": "object"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/oracles/iv":
+    "get":
+      "summary": "Gets multiple IV values for all valid strikes for a given option expiration of an underlying market via IV oracles."
+      "parameters":
+        -
+          "name": "market"
+          "in": "query"
+          "required": true
+          "description": "base token symbol (ie WETH)"
+          "schema":
+            "type": "string"
+            "example": "WETH"
+        -
+          "name": "expiration"
+          "in": "query"
+          "required": true
+          "description": "option expiration (ie 03NOV23)"
+          "schema":
+            "type": "string"
+            "example": "03NOV23"
+        -
+          "name": "spotPrice"
+          "in": "query"
+          "required": false
+          "description": "spot price of underlying"
+          "schema":
+            "type": "number"
+            "minimum": 0
+            "example": 2123.23
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "strike":
+                      "type": "number"
+                      "example": 1700
+                    "iv":
+                      "type": "number"
+                      "example": 0.47
+                  "required":
+                    - "strike"
+                    - "iv"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/oracles/spot":
+    "get":
+      "summary": "Gets multiple spot prices from chainlink oracles by providing an array of one or more token symbols."
+      "parameters":
+        -
+          "name": "market"
+          "in": "query"
+          "required": true
+          "description": "one or more base token symbols ie [WETH, WBTC, ARB]"
+          "schema":
+            "type": "array"
+            "items":
+              "type": "string"
+            "minItems": 1
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "market":
+                      "type": "string"
+                      "example": "WETH"
+                    "price":
+                      "type": "number"
+                      "example": 2500.25
+                  "required":
+                    - "market"
+                    - "price"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/vaults/quote":
+    "get":
+      "summary": "Get a quote from a vault. Quotes are normalized prices. For calls, price is denominated in the base token (ie 0.13 WETH), and for puts price is in denominated in the quote token but normalized using strike. For example, a put price of 0.13 => (234 USDC price / 1800 Strike ) is equivalent to 234 USDC if the strike is 1800."
+      "parameters":
+        -
+          "name": "base"
+          "in": "query"
+          "required": true
+          "description": "base token symbol (ie WETH)"
+          "schema":
+            "type": "string"
+            "example": "WETH"
+        -
+          "name": "quote"
+          "in": "query"
+          "required": true
+          "description": "quote token symbol (ie USDC)"
+          "schema":
+            "type": "string"
+            "example": "USDC"
+        -
+          "name": "expiration"
+          "in": "query"
+          "required": true
+          "description": "option expiration (ie 03NOV23)"
+          "schema":
+            "type": "string"
+            "example": "03NOV23"
+        -
+          "name": "strike"
+          "in": "query"
+          "required": true
+          "description": "option strike (ie 1800)"
+          "schema":
+            "type": "number"
+            "minimum": 0
+            "example": 1800
+        -
+          "name": "type"
+          "in": "query"
+          "description": "C or P"
+          "required": true
+          "schema":
+            "type": "string"
+            "pattern": "^C$|^P$"
+            "example": "P"
+        -
+          "name": "size"
+          "in": "query"
+          "description": "number of contracts (ie 4)"
+          "required": true
+          "schema":
+            "type": "number"
+            "minimum": 0
+            "example": 4
+        -
+          "name": "direction"
+          "in": "query"
+          "description": "direction of trade (buy or sell)"
+          "required": true
+          "schema":
+            "type": "string"
+            "example": "buy"
+      "responses":
+        "200":
+          "description": "Successful operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "market":
+                    "type": "object"
+                    "properties":
+                      "vault":
+                        "type": "string"
+                        "example": "pSV-WETH/USDCe-C"
+                      "strike":
+                        "type": "number"
+                        "example": 2500
+                      "expiration":
+                        "type": "string"
+                        "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                        "example": "03NOV23"
+                      "size":
+                        "type": "number"
+                        "example": 4
+                      "direction":
+                        "type": "string"
+                        "example": "buy"
+                  "quote":
+                    "type": "number"
+                    "example": 0.2356
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+  "/vaults/trade":
+    "post":
+      "summary": "Trade with a vault."
+      "requestBody":
+        "content":
+          "application/json":
+            "schema":
+              "type": "object"
+              "properties":
+                "base":
+                  "type": "string"
+                  "example": "WETH"
+                "quote":
+                  "type": "string"
+                  "example": "USDC"
+                "expiration":
+                  "type": "string"
+                  "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                  "example": "03NOV23"
+                "strike":
+                  "type": "number"
+                  "example": 1700
+                "type":
+                  "enum":
+                    - "C"
+                    - "P"
+                  "type": "string"
+                  "example": "P"
+                "size":
+                  "type": "number"
+                  "example": 4
+                "direction":
+                  "type": "string"
+                  "example": "buy"
+                "premiumLimit":
+                  "type": "number"
+                  "example": 0.23
+        "required": true
+      "responses":
+        "200":
+          "description": "Successful Operation"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "market":
+                    "type": "object"
+                    "properties":
+                      "vault":
+                        "type": "string"
+                        "example": "pSV-WETH/USDCe-C"
+                      "strike":
+                        "type": "number"
+                        "example": 2500
+                      "expiration":
+                        "type": "string"
+                        "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+                        "example": "03NOV23"
+                      "size":
+                        "type": "number"
+                        "example": 4
+                      "direction":
+                        "type": "string"
+                        "example": "buy"
+        "400":
+          "description": "Invalid parameters supplied"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "keyword":
+                      "type": "string"
+                    "dataPath":
+                      "type": "string"
+                    "params":
+                      "type": "object"
+                    "message":
+                      "type": "string"
+        "401":
+          "description": "Not authorized"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "message":
+                    "type": "string"
+                    "default": "Invalid API key"
+      "security":
+        -
+          "api_key":
+            - "api"
+"components":
+  "schemas":
+    "Option":
+      "type": "object"
+      "properties":
+        "base":
+          "type": "string"
+          "example": "WETH"
+        "quote":
+          "type": "string"
+          "example": "USDC"
+        "expiration":
+          "type": "string"
+          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+          "example": "03NOV23"
+        "strike":
+          "type": "number"
+          "example": 1700
+        "type":
+          "enum":
+            - "C"
+            - "P"
+          "type": "string"
+          "example": "P"
+    "PoolWithAddress":
+      "type": "object"
+      "allOf":
+        -
+          "type": "object"
+          "properties":
+            "base":
+              "type": "string"
+              "example": "WETH"
+            "quote":
+              "type": "string"
+              "example": "USDC"
+            "expiration":
+              "type": "string"
+              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+              "example": "03NOV23"
+            "strike":
+              "type": "number"
+              "example": 1700
+            "type":
+              "enum":
+                - "C"
+                - "P"
+              "type": "string"
+              "example": "P"
+      "properties":
+        "poolAddress":
+          "type": "string"
+          "example": "0x...4cFF2"
+    "NFTBalance":
+      "type": "object"
+      "properties":
+        "amount":
+          "type": "number"
+          "example": 2.46
+        "name":
+          "type": "string"
+          "example": "WETH-USDC-03NOV2023-1800-P"
+        "token_address":
+          "type": "string"
+          "example": "0x...4cFF2"
+        "exposure":
+          "type": "string"
+          "enum":
+            - "SHORT"
+            - "LONG"
+    "OptionPositions":
+      "properties":
+        "expired":
+          "items":
+            "type": "object"
+            "properties":
+              "amount":
+                "type": "number"
+                "example": 2.46
+              "name":
+                "type": "string"
+                "example": "WETH-USDC-03NOV2023-1800-P"
+              "token_address":
+                "type": "string"
+                "example": "0x...4cFF2"
+              "exposure":
+                "type": "string"
+                "enum":
+                  - "SHORT"
+                  - "LONG"
+          "type": "array"
+        "open":
+          "items":
+            "type": "object"
+            "properties":
+              "amount":
+                "type": "number"
+                "example": 2.46
+              "name":
+                "type": "string"
+                "example": "WETH-USDC-03NOV2023-1800-P"
+              "token_address":
+                "type": "string"
+                "example": "0x...4cFF2"
+              "exposure":
+                "type": "string"
+                "enum":
+                  - "SHORT"
+                  - "LONG"
+          "type": "array"
+      "type": "object"
+    "TokenBalance":
+      "type": "object"
+      "properties":
+        "balance":
+          "oneOf":
+            -
+              "type": "string"
+            -
+              "type": "number"
+          "example": 2.345
+        "symbol":
+          "type": "string"
+          "example": "WETH"
+        "token_address":
+          "type": "string"
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+          "example": "0x...4cFF2"
+    "TokenApproval":
+      "type": "object"
+      "properties":
+        "token":
+          "type": "string"
+          "example": "WETH"
+        "amt":
+          "oneOf":
+            -
+              "type": "number"
+            -
+              "type": "string"
+              "pattern": "^max$"
+          "example": "max"
+    "ReturnedOrderbookQuote":
+      "required":
+        - "base"
+        - "quote"
+        - "expiration"
+        - "strike"
+        - "type"
+        - "side"
+        - "remainingSize"
+        - "price"
+        - "provider"
+        - "taker"
+        - "deadline"
+        - "ts"
+      "type": "object"
+      "properties":
+        "base":
+          "type": "string"
+          "example": "WETH"
+        "quote":
+          "type": "string"
+          "example": "USDC"
+        "expiration":
+          "type": "string"
+          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+          "example": "03NOV23"
+        "strike":
+          "type": "number"
+          "example": 1700
+        "type":
+          "enum":
+            - "C"
+            - "P"
+          "type": "string"
+          "example": "P"
+        "side":
+          "enum":
+            - "ask"
+            - "bid"
+          "type": "string"
+          "example": "bid"
+        "remainingSize":
+          "type": "number"
+          "example": 3
+        "provider":
+          "type": "string"
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+          "example": "ba638...fb25e"
+        "taker":
+          "type": "string"
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+          "example": "0x0000000000000000000000000000000000000000"
+        "price":
+          "type": "number"
+          "example": ".15"
+        "deadline":
+          "type": "number"
+          "example": 184
+        "quoteId":
+          "type": "string"
+          "pattern": "[a-fA-F0-9]{64}$"
+          "example": "ba638...fb25e"
+        "ts":
+          "type": "number"
+          "example": 1698952534
+    "DeleteQuotesRequest":
+      "type": "object"
+      "properties":
+        "quoteIds":
+          "type": "array"
+          "items":
+            "type": "string"
+            "pattern": "[a-fA-F0-9]{64}$"
+            "example": "ba638...fb25e"
+          "minItems": 1
+      "required":
+        - "quoteIds"
+    "FillQuotesRequest":
+      "type": "object"
+      "properties":
+        "tradeSize":
+          "type": "number"
+          "minimum": 0
+          "example": 4
+        "quoteId":
+          "type": "string"
+          "pattern": "[a-fA-F0-9]{64}$"
+          "example": "ba638...fb25e"
+      "required":
+        - "tradeSize"
+        - "quoteId"
+    "PositionsRequestParams":
+      "type": "object"
+      "properties":
+        "base":
+          "type": "string"
+          "example": "WETH"
+        "quote":
+          "type": "string"
+          "example": "USDC"
+        "expiration":
+          "type": "string"
+          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+          "example": "03NOV23"
+        "strike":
+          "type": "number"
+          "example": 1700
+        "type":
+          "type": "string"
+          "pattern": "^C$|^P$"
+          "example": "C"
+      "required":
+        - "base"
+        - "quote"
+        - "expiration"
+        - "strike"
+        - "type"
+    "ApprovalsRequest":
+      "type": "array"
+      "items":
+        "type": "object"
+        "properties":
+          "token":
+            "type": "string"
+            "example": "WETH"
+          "amt":
+            "oneOf":
+              -
+                "type": "number"
+              -
+                "type": "string"
+                "pattern": "^max$"
+            "example": "max"
+        "required":
+          - "token"
+          - "amt"
+      "minItems": 1
+      "maxItems": 8
+    "PublishQuotesRequest":
+      "type": "object"
+      "properties":
+        "base":
+          "type": "string"
+          "example": "WETH"
+        "quote":
+          "type": "string"
+          "example": "USDC"
+        "expiration":
+          "type": "string"
+          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+          "example": "03NOV23"
+        "strike":
+          "type": "number"
+          "example": 1800
+        "type":
+          "type": "string"
+          "pattern": "^C$|^P$"
+          "example": "P"
+        "side":
+          "type": "string"
+          "pattern": "^bid$|^ask$"
+          "example": "bid"
+        "size":
+          "type": "number"
+          "example": 4
+        "price":
+          "type": "number"
+          "example": ".13"
+        "deadline":
+          "type": "integer"
+          "example": 120
+        "taker":
+          "type": "string"
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+          "example": "0x...4cFF2"
+      "required":
+        - "base"
+        - "quote"
+        - "expiration"
+        - "strike"
+        - "type"
+        - "side"
+        - "size"
+        - "price"
+        - "deadline"
+    "VaultResponse":
+      "type": "object"
+      "properties":
+        "vault":
+          "type": "string"
+          "example": "pSV-WETH/USDCe-C"
+        "strike":
+          "type": "number"
+          "example": 2500
+        "expiration":
+          "type": "string"
+          "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+          "example": "03NOV23"
+        "size":
+          "type": "number"
+          "example": 4
+        "direction":
+          "type": "string"
+          "example": "buy"
+    "FailedOptions":
+      "type": "object"
+      "properties":
+        "failedOption":
+          "type": "object"
+          "properties":
+            "base":
+              "type": "string"
+              "example": "WETH"
+            "quote":
+              "type": "string"
+              "example": "USDC"
+            "expiration":
+              "type": "string"
+              "pattern": "^\\d\\d\\w\\w\\w\\d\\d$"
+              "example": "03NOV23"
+            "strike":
+              "type": "number"
+              "example": 1700
+            "type":
+              "enum":
+                - "C"
+                - "P"
+              "type": "string"
+              "example": "P"
+        "reason":
+          "type": "string"
+    "FailedApproval":
+      "type": "object"
+      "properties":
+        "failedApproval":
+          "type": "object"
+          "properties":
+            "token":
+              "type": "string"
+              "example": "WETH"
+            "amt":
+              "oneOf":
+                -
+                  "type": "number"
+                -
+                  "type": "string"
+                  "pattern": "^max$"
+              "example": "max"
+        "reason":
+          "type": "string"
+      "required":
+        - "failedApproval"
+        - "reason"
+    "AuthError":
+      "type": "object"
+      "properties":
+        "message":
+          "type": "string"
+          "default": "Invalid API key"
+    "ValidationError":
+      "type": "array"
+      "items":
+        "type": "object"
+        "properties":
+          "keyword":
+            "type": "string"
+          "dataPath":
+            "type": "string"
+          "params":
+            "type": "object"
+          "message":
+            "type": "string"
+  "securitySchemes":
+    "api_key":
+      "type": "apiKey"
+      "name": "x-apikey"
+      "in": "header"
