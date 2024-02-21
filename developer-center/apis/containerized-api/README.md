@@ -19,3 +19,11 @@ Even if a trader is not familiar with Typescript or Docker, the setup process is
 ### <mark style="color:blue;">Setup Instructions</mark>
 
 Detailed setup instructions for the Containerized API can be found directly in the repository README.  Once setup is complete, please review the [API Reference](api-reference/) section which provides a user friendly guide to accessing all the available endpoints.
+
+### <mark style="color:blue;">Note about USDC vs USDCe (Bridged USDC)</mark>
+
+{% hint style="success" %}
+IMPORTANT:  The containerized api uses token symbols instead of addresses when interacting with the endpoints.  When using `USDC` as the quote token symbol, it is implied that the token being used is `USDCe` (bridged USDC). Please make sure all approvals are done for USDCe, but when interacting with the container use the symbol USDC.  \
+\
+The USDCe contract can be found [here](https://arbiscan.io/address/0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8).
+{% endhint %}
