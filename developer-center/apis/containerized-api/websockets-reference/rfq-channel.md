@@ -86,6 +86,7 @@ wsConnection.send(JSON.stringify(rfqRequest))
 
 
 // unsubscribe to WS messages
+// NOTE: unsubscribing does NOT close the ws connection
 const unsubscribeMsg: WSUnsubscribeMessage = {
     type: 'UNSUBSCRIBE',
     channel: channel,

@@ -104,6 +104,7 @@ wsConnection.send(JSON.stringify(webSocketFilter))
 
 
 // unsubscribe to WS messages
+// NOTE: unsubscribing does NOT close the ws connection
 const unsubscribeMsg: WSUnsubscribeMessage = {
     type: 'UNSUBSCRIBE',
     channel: 'QUOTES',
