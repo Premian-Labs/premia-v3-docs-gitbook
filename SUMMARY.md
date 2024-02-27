@@ -87,6 +87,7 @@
         * [Trade](developer-center/apis/containerized-api/api-reference/vaults/trade.md)
     * [WebSockets Reference](developer-center/apis/containerized-api/websockets-reference/README.md)
       * [Authorization](developer-center/apis/containerized-api/websockets-reference/authorization.md)
+      * [Connection](developer-center/apis/containerized-api/websockets-reference/connection.md)
       * [Quotes Channel](developer-center/apis/containerized-api/websockets-reference/quotes-channel.md)
       * [RFQ Channel](developer-center/apis/containerized-api/websockets-reference/rfq-channel.md)
 * [SDK](developer-center/sdk/README.md)
