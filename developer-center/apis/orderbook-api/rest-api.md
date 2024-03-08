@@ -15,8 +15,8 @@ description: Rest API End Points
 
 To submit a quote to the orderbook, `POST` quotes can be used.  In the background, we will take this quote an submit an event on Arbitrum Nova on the users behalf.  One the quote event is generated on Arbitrum Nova, it will be added to the orderbook.
 
-{% swagger src="../../../.gitbook/assets/openapi3_0.yaml" path="/quotes" method="post" %}
-[openapi3_0.yaml](../../../.gitbook/assets/openapi3_0.yaml)
+{% swagger src="../../../.gitbook/assets/cloud.yaml" path="/quotes" method="post" %}
+[cloud.yaml](../../../.gitbook/assets/cloud.yaml)
 {% endswagger %}
 
 {% tabs %}
@@ -192,8 +192,8 @@ getRfqQuotes(poolAddress, side, chainId, takerAddress)
 
 `GET` orders is a _general purpose_ query of orders in the orderbook.  Many of the params are optional to suit the needs of the query.  Orders are returned in descending order based on the _timestamp_ in which they were created.
 
-{% swagger src="../../../.gitbook/assets/openapi3_0.yaml" path="/orders" method="get" %}
-[openapi3_0.yaml](../../../.gitbook/assets/openapi3_0.yaml)
+{% swagger src="../../../.gitbook/assets/cloud.yaml" path="/orders" method="get" %}
+[cloud.yaml](../../../.gitbook/assets/cloud.yaml)
 {% endswagger %}
 
 {% hint style="warning" %}
